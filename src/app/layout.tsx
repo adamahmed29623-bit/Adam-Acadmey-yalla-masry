@@ -1,12 +1,9 @@
+import "./globals.css"; // هذا السطر هو الذي سيجلب الألوان ويضع الكتابة في المنتصف
 import type { Metadata } from "next";
-import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "NEFERTITI ROYAL ACADEMY | أكاديمية نفرتيتي الملكية",
-  description: "المكان الأول لصناعة النخبة والرفعة",
-  icons: {
-    icon: "/favicon.ico", // تأكدي من وضع أيقونة ملكية في مجلد public لاحقاً
-  }
+  title: "NEFERTITI ROYAL ACADEMY",
+  description: "صرح العلم والرفعة",
 };
 
 export default function RootLayout({
@@ -16,7 +13,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ar" dir="rtl">
-      <body className="bg-[#000814] text-white">
+      <body>
         {children}
       </body>
     </html>
