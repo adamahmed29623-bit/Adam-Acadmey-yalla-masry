@@ -1,54 +1,57 @@
 "use client";
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Crown, BookOpen, Users, ShoppingBag, Settings } from 'lucide-react';
-import Link from 'next/link';
+import { Crown, Sparkles, ShieldCheck } from 'lucide-react';
 
 export default function QueenPortal() {
-  const menuItems = [
-    { name: "رواق المعرفة", icon: <BookOpen />, path: "/courses" },
-    { name: "مجلس الطلاب", icon: <Users />, path: "/student-dashboard" },
-    { name: "خزانة الكتب", icon: <ShoppingBag />, path: "/store" },
-    { name: "الإعدادات الملكية", icon: <Settings />, path: "/teacher/profile" },
-  ];
-
   return (
-    <div className="min-h-screen bg-[#000814] text-white overflow-hidden relative">
-      {/* التأثيرات الخلفية */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-amber-500/10 via-transparent to-transparent opacity-60"></div>
+    <div className="min-h-screen bg-[#000814] flex flex-col items-center justify-center text-white p-6 relative overflow-hidden">
+      {/* خلفية ملكية هادئة لضمان عدم حدوث أخطاء في العرض */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-amber-500/5 via-transparent to-transparent opacity-40"></div>
       
-      <main className="relative z-10 flex flex-col items-center justify-center min-h-screen p-6 text-center">
-        <motion.div 
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1 }}
-        >
-          <Crown className="w-24 h-24 text-amber-500 mx-auto mb-6 drop-shadow-[0_0_15px_rgba(245,158,11,0.5)]" />
-          <h1 className="text-5xl md:text-8xl font-black tracking-tighter italic mb-4">
-            NEFERTITI <span className="text-amber-500">ACADEMY</span>
+      <motion.div 
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1.5, ease: "easeOut" }}
+        className="text-center z-10 space-y-8"
+      >
+        <div className="flex justify-center relative">
+          <motion.div
+            animate={{ scale: [1, 1.1, 1] }}
+            transition={{ repeat: Infinity, duration: 3 }}
+          >
+            <Crown className="w-28 h-28 text-amber-500 shadow-2xl" />
+          </motion.div>
+          <Sparkles className="absolute -top-4 -right-4 text-amber-200 animate-pulse" />
+        </div>
+
+        <div className="space-y-2">
+          <h1 className="text-5xl md:text-8xl font-black tracking-tighter italic text-transparent bg-clip-text bg-gradient-to-b from-white via-amber-200 to-amber-500">
+            NEFERTITI
           </h1>
-          <p className="text-xl md:text-2xl text-slate-400 tracking-[0.4em] uppercase font-light mb-12">
+          <h2 className="text-2xl md:text-4xl font-bold tracking-[0.2em] text-amber-500/90">
+            ROYAL ACADEMY
+          </h2>
+        </div>
+
+        <div className="flex items-center justify-center gap-4 text-slate-400">
+          <div className="h-[1px] w-12 bg-amber-500/30"></div>
+          <p className="text-xl md:text-2xl font-light italic tracking-widest">
             صرح العلم والرفعة
           </p>
-        </motion.div>
-
-        {/* أزرار الوصول السريع للملفات الموجودة بالمستودع */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-5xl w-full px-4">
-          {menuItems.map((item, index) => (
-            <Link href={item.path} key={index}>
-              <motion.div 
-                whileHover={{ scale: 1.05, borderColor: '#f59e0b' }}
-                className="p-6 bg-[#001d3d] border border-white/5 rounded-[2rem] flex flex-col items-center gap-4 transition-all cursor-pointer group"
-              >
-                <div className="text-amber-500 group-hover:scale-110 transition-transform">
-                  {React.cloneElement(item.icon as React.ReactElement, { size: 32 })}
-                </div>
-                <span className="font-bold text-lg">{item.name}</span>
-              </motion.div>
-            </Link>
-          ))}
+          <div className="h-[1px] w-12 bg-amber-500/30"></div>
         </div>
-      </main>
+
+        <motion.div 
+          whileHover={{ scale: 1.05 }}
+          className="pt-12"
+        >
+          <div className="inline-flex items-center gap-3 px-12 py-5 border-2 border-amber-500/50 rounded-full bg-amber-500/10 text-amber-500 font-black text-xl backdrop-blur-md shadow-[0_0_30px_rgba(212,175,55,0.2)]">
+            <ShieldCheck className="w-6 h-6" />
+            الدخول إلى الرواق الملكي
+          </div>
+        </motion.div>
+      </motion.div>
     </div>
   );
 }
