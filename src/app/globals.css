@@ -3,25 +3,30 @@
 @tailwind utilities;
 
 :root {
-  --royal-gold: #D4AF37;
-  --royal-black: #000814;
+  --royal-blue: #001d3d;
+  --glow-gold: #FFD700; /* ذهب نقي مشع */
 }
 
 body {
-  background-color: #000814; /* الأسود الملكي العميق */
+  background: radial-gradient(circle at center, #003566 0%, #001d3d 100%);
   color: white;
   margin: 0;
-  padding: 0;
-  overflow-x: hidden;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-/* ضمان أن كل حاوية تأخذ عرض الشاشة بالكامل وتتوسطها */
-main, .flex-col {
-  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
+  min-height: 100vh;
+  text-align: center;
+  overflow-x: hidden;
+}
+
+/* تأثير الإضاءة الذهبية القوية */
+.gold-glow {
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.7), 
+               0 0 20px rgba(255, 215, 0, 0.5), 
+               0 0 30px rgba(255, 215, 0, 0.3);
+}
+
+.button-glow {
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.4), 
+              0 0 30px rgba(255, 215, 0, 0.2);
 }
