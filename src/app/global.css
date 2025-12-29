@@ -1,0 +1,48 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* تعريف الألوان الملكية للأكاديمية */
+:root {
+  --royal-blue: #001d3d;
+  --deep-navy: #000814;
+  --gold-glow: #ffc300;
+}
+
+body {
+  /* التدرج الأزرق الملكي العميق الذي طلبته */
+  background: radial-gradient(circle at center, var(--royal-blue) 0%, var(--deep-navy) 100%) !important;
+  color: white !important;
+  min-height: 100vh;
+  margin: 0;
+  font-family: 'Inter', sans-serif; /* أو أي خط تفضلينه */
+}
+
+/* تحويل الألوان الباهتة إلى ذهبي وهاج */
+.text-amber-500 {
+  color: var(--gold-glow) !important;
+}
+
+.bg-amber-500 {
+  background-color: var(--gold-glow) !important;
+  color: #000 !important; /* النص داخل الأزرار الذهبية يكون أسود */
+}
+
+/* تحسين مظهر الحقول (Input) لتكون شفافة وفخمة */
+input, textarea {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 195, 0, 0.2) !important;
+  color: white !important;
+  border-radius: 12px !important;
+}
+
+/* إضافة لمعان ملكي للأزرار */
+button {
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+button:hover {
+  filter: brightness(1.2);
+  transform: translateY(-2px);
+}
