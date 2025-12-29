@@ -1,24 +1,6 @@
 {
   "version": 2,
-  "name": "nefertiti-royal-academy",
-  "builds": [
-    {
-      "src": "package.json",
-      "use": "@vercel/next"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/$1"
-    }
-  ],
-  "build": {
-    "env": {
-      "NEXT_PUBLIC_ACADEMY_NAME": "Nefertiti Royal Academy",
-      "NEXT_PUBLIC_THEME": "Royal-Gold-Dark"
-    }
-  },
   "cleanUrls": true,
-  "trailingSlash": false
+  "trailingSlash": false,
+  "framework": "nextjs"
 }
