@@ -1,4 +1,3 @@
-
 "use client";
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
@@ -46,3 +45,4 @@ export default function BookingPage() {
       </div>
     </div>
   );
+} // هذا هو القوس الذي كان ينقص الأكاديمية لتفتح أبوابها
