@@ -1,8 +1,12 @@
 import type { Metadata } from "next";
+import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "أكاديمية يلا مصري | Yalla Masry Academy",
-  description: "بوابة الرقي والفخامة",
+  title: "NEFERTITI ROYAL ACADEMY | أكاديمية نفرتيتي الملكية",
+  description: "المكان الأول لصناعة النخبة والرفعة",
+  icons: {
+    icon: "/favicon.ico", // تأكدي من وضع أيقونة ملكية في مجلد public لاحقاً
+  }
 };
 
 export default function RootLayout({
@@ -12,19 +16,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ar" dir="rtl">
-      <head>
-        {/* ربط مكتبة الأيقونات مباشرة عبر CDN (مثل نظام الفاير بيس) */}
-        <script src="https://unpkg.com/lucide@latest"></script>
-        <style>{`
-          body {
-            margin: 0;
-            background-color: #000814;
-            color: white;
-            font-family: sans-serif;
-          }
-        `}</style>
-      </head>
-      <body>
+      <body className="bg-[#000814] text-white">
         {children}
       </body>
     </html>
