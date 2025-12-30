@@ -1,5 +1,18 @@
-// استيراد البيانات مباشرة من نفس المجلد الحالي
-import academyData from '../academy-details.json';
+const academyData = {
+  "name": "أكاديمية نفرتيتي الملكية",
+  "vision": "بناء جيل يفتخر بهويته ولغته",
+  "theme": {
+    "primary": "#002366",
+    "secondary": "#D4AF37",
+    "accent": "#FFD700"
+  },
+  "sections": [
+    { "id": "quran", "title": "القرآن الكريم", "icon": "/images/icons/icon_quran.png" },
+    { "id": "dialect", "title": "اللهجة المصرية", "icon": "/images/icons/icon_dialect.png" },
+    { "id": "kids", "title": "أشبال الأكاديمية", "icon": "/images/icons/icon_kids.png" },
+    { "id": "museum", "title": "المتحف الملكي", "icon": "/images/icons/icon_museum.png" }
+  ]
+};
 
 export default function HomePage() {
   return (
