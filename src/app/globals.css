@@ -1,21 +1,62 @@
+@import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap');
 
 :root {
   --royal-blue: #002366;
   --gold: #D4AF37;
-  --white-ivory: #FFFFF0;
+  --ivory: #FFFFF0;
+}
+
+* {
+  box-sizing: border-box;
 }
 
 body {
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
-  font-family: 'Times New Roman', serif; /* خط كلاسيكي ملكي */
+  font-family: 'Amiri', serif; /* خط عربي أصيل وفخم */
   background-color: var(--royal-blue);
   color: var(--royal-blue);
+  line-height: 1.6;
 }
 
-/* تحسين شكل النصوص الذهبية */
 h1, h2, h3 {
   color: var(--gold);
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+  text-align: center;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* تصميم الكروت الملكية */
+.royal-card {
+  background: white;
+  border: 2px solid var(--gold);
+  border-radius: 15px;
+  padding: 20px;
+  text-align: center;
+  transition: all 0.3s ease-in-out;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.royal-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 30px rgba(212, 175, 55, 0.4);
+}
+
+/* زر دخول الأكاديمية */
+.royal-btn {
+  background-color: var(--gold);
+  color: var(--royal-blue);
+  padding: 12px 35px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  transition: background 0.3s;
+}
+
+.royal-btn:hover {
+  background-color: #b8962d;
+  transform: scale(1.05);
 }
