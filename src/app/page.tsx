@@ -1,5 +1,5 @@
 // استيراد البيانات مباشرة من نفس المجلد الحالي
-import academyData from './academy-details.json';
+import academyData from '../academy-details.json';
 
 export default function HomePage() {
   return (
