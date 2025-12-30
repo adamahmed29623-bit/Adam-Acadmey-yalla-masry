@@ -1,32 +1,21 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 
 :root {
-  --royal-blue: #001d3d;
-  --glow-gold: #FFD700; /* ذهب نقي مشع */
+  --royal-blue: #002366;
+  --gold: #D4AF37;
+  --white-ivory: #FFFFF0;
 }
 
 body {
-  background: radial-gradient(circle at center, #003566 0%, #001d3d 100%);
-  color: white;
   margin: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  text-align: center;
-  overflow-x: hidden;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Times New Roman', serif; /* خط كلاسيكي ملكي */
+  background-color: var(--royal-blue);
+  color: var(--royal-blue);
 }
 
-/* تأثير الإضاءة الذهبية القوية */
-.gold-glow {
-  text-shadow: 0 0 10px rgba(255, 215, 0, 0.7), 
-               0 0 20px rgba(255, 215, 0, 0.5), 
-               0 0 30px rgba(255, 215, 0, 0.3);
-}
-
-.button-glow {
-  box-shadow: 0 0 15px rgba(255, 215, 0, 0.4), 
-              0 0 30px rgba(255, 215, 0, 0.2);
+/* تحسين شكل النصوص الذهبية */
+h1, h2, h3 {
+  color: var(--gold);
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
 }
