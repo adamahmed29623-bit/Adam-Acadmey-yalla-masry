@@ -2,43 +2,35 @@ import data from '../public/academy-details.json';
 
 export default function HomePage() {
   return (
-    <div style={{ textAlign: 'center', padding: '20px' }}>
-      <h1 style={{ fontSize: '2.5rem' }}>{data.welcome_section.title}</h1>
+    <div style={{ padding: '20px', maxWidth: '800px', margin: '0 auto' }}>
+      <h1>{data.welcome_section.title}</h1>
+      <p style={{ textAlign: 'center', fontSize: '1.2rem', color: '#fff' }}>
+        {data.welcome_section.intro_text}
+      </p>
       
-      {/* فيديو الترحيب */}
-      <div style={{ margin: '20px auto', borderRadius: '20px', overflow: 'hidden', width: 'fit-content', border: '3px solid #D4AF37' }}>
-        <iframe width="315" height="560" src="https://www.youtube.com/embed/TNtIUkPaG30" frameBorder="0" allowFullScreen></iframe>
+      {/* فيديو الترحيب الملكي */}
+      <div style={{ display: 'flex', justifyContent: 'center', margin: '30px 0' }}>
+        <div style={{ borderRadius: '20px', overflow: 'hidden', border: '4px solid #D4AF37', boxShadow: '0 0 20px rgba(212,175,55,0.5)' }}>
+          <iframe 
+            width="315" 
+            height="560" 
+            src="https://www.youtube.com/embed/TNtIUkPaG30" 
+            frameBorder="0" 
+            allowFullScreen>
+          </iframe>
+        </div>
       </div>
 
-      {/* زر دخول الأكاديمية - Royal Button */}
-      <button style={{
-        backgroundColor: '#D4AF37',
-        color: '#002366',
-        padding: '15px 40px',
-        fontSize: '1.2rem',
-        fontWeight: 'bold',
-        border: 'none',
-        borderRadius: '50px',
-        cursor: 'pointer',
-        boxShadow: '0 5px 15px rgba(0,0,0,0.3)',
-        marginBottom: '40px'
-      }}>
-        ابدأ الرحلة الملكية
-      </button>
+      <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+        <button className="royal-btn">ابدأ الرحلة الملكية</button>
+      </div>
 
-      {/* الأقسام في شكل Cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '20px', padding: '10px' }}>
+      {/* عرض الأقسام */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '20px' }}>
         {data.sections.map((section) => (
-          <div key={section.id} style={{
-            background: 'white',
-            border: '2px solid #D4AF37',
-            borderRadius: '15px',
-            padding: '20px',
-            transition: 'transform 0.3s',
-            boxShadow: '0 4px 8px rgba(0,0,0,0.1)'
-          }}>
+          <div key={section.id} className="royal-card">
             <img src={`/images/icons/${section.icon}`} alt={section.name} style={{ width: '60px', marginBottom: '10px' }} />
-            <h3 style={{ fontSize: '1rem', margin: '0' }}>{section.name}</h3>
+            <h3 style={{ fontSize: '1.1rem', margin: '0', color: '#002366' }}>{section.name}</h3>
           </div>
         ))}
       </div>
