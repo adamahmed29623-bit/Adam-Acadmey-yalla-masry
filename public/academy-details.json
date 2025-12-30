@@ -1,0 +1,20 @@
+{
+  "academy_name": "Nefertiti Royal Academy",
+  "theme": {
+    "primary_color": "#002366", 
+    "accent_color": "#D4AF37",
+    "background_style": "Royal Blue & White Gradient"
+  },
+  "welcome_section": {
+    "title": "أهلاً بكِ في رحاب الحضارة المصرية",
+    "subtitle": "هنا يبدأ سحر القوة والجمال",
+    "welcome_video_url": "https://youtube.com/shorts/TNtIUkPaG30?si=wW8_hO-5Hx42X_FE",
+    "intro_text": "يا أهلاً بيك في مكانك.. هنا مش بس بنتعلم لغة، هنا بنعيش حكاية مصرية أصيلة بالذكاء الاصطناعي وبكل رقي."
+  },
+  "sections": [
+    {"id": "dialect", "name": "واقع اللهجة المصرية", "icon": "icon_dialect.png"},
+    {"id": "quran", "name": "نور البيان - القرآن الكريم", "icon": "icon_quran.png"},
+    {"id": "kids", "name": "أشبال الأكاديمية", "icon": "icon_kids.png"},
+    {"id": "museum", "name": "المتحف الملكي الافتراضي", "icon": "icon_museum.png"}
+  ]
+}
