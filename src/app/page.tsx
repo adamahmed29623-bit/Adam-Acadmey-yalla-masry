@@ -2,56 +2,65 @@
 import React from 'react';
 import Link from 'next/link';
 
-export default function RoyalDashboard() {
+export default function RoyalAcademyHome() {
   return (
-    <div style={{ backgroundColor: '#002366', minHeight: '100vh', color: '#fff', textAlign: 'center', padding: '40px 20px' }}>
-      
-      {/* الهوية الملكية للأكاديمية */}
-      <div style={{ marginBottom: '30px' }}>
-        <h1 style={{ color: '#D4AF37', fontSize: '2.8rem', textShadow: '0 0 10px rgba(212,175,55,0.5)' }}>
-          Royal Control Panel
-        </h1>
-        <p style={{ fontSize: '1.2rem', color: '#D4AF37' }}>تلميذ النيل: تحتمس القوي</p>
+    <div style={containerStyle}>
+      {/* قسم الهوية الملكية */}
+      <div style={headerStyle}>
+        <h1 style={titleStyle}>Royal Control Panel</h1>
+        <p style={subtitleStyle}>تلميذ النيل: تحتمس القوي</p>
       </div>
 
-      {/* ممرات الأكاديمية (الروابط) */}
-      <div style={{ maxWidth: '600px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+      {/* ممرات الأكاديمية الـ 14 (الروابط المصححة) */}
+      <div style={gridStyle}>
         
-        <Link href="/challenges" style={linkStyle}>
-          <button style={buttonStyle}>⚔️ التحديات الملكية (تحتمس والقوي)</button>
-        </Link>
-
-        <Link href="/teachers" style={linkStyle}>
-          <button style={buttonStyle}>🏺 مجمع كبار المعلمين</button>
-        </Link>
-
-        <Link href="/booking" style={linkStyle}>
-          <button style={buttonStyle}>📅 حجز جلسة لغة ملكية</button>
-        </Link>
-
-        <Link href="/stats" style={linkStyle}>
-          <button style={{...buttonStyle, borderColor: '#4CAF50'}}>📊 إحصائيات التقدم الفرعوني</button>
-        </Link>
+        {/* الربط بالمسارات التي بناها Netlify بنجاح */}
+        <Link href="/challenges" style={linkStyle}>⚔️ التحديات الملكية</Link>
+        <Link href="/booking" style={linkStyle}>📅 حجز جلسة فرعوني</Link>
+        <Link href="/dashboard" style={linkStyle}>🏺 لوحة تحكم المعلمين</Link>
+        <Link href="/classroom" style={linkStyle}>🏛️ الفصل الدراسي</Link>
+        <Link href="/store" style={linkStyle}>🎁 متجر المكافآت</Link>
+        <Link href="/student-dashboard" style={linkStyle}>📊 لوحة تحكم الطالب</Link>
+        <Link href="/gulf-wing" style={linkStyle}>🌊 جناح الخليج</Link>
+        <Link href="/login" style={linkStyle}>🔑 تسجيل الدخول (المصحح)</Link>
+        <Link href="/signup" style={linkStyle}>📝 التسجيل الجديد</Link>
+        <Link href="/welcome" style={linkStyle}>📜 صفحة الترحيب</Link>
 
       </div>
     </div>
   );
 }
 
-// التنسيقات المصححة لضمان نجاح الـ Build
-const buttonStyle: React.CSSProperties = {
-  width: '100%',
-  padding: '20px',
-  borderRadius: '50px',
-  background: 'rgba(255, 255, 255, 0.07)',
-  border: '2px solid #D4AF37',
+// التنسيقات الملكية (CSS in JS)
+const containerStyle: React.CSSProperties = {
+  backgroundColor: '#002366',
+  minHeight: '100vh',
   color: '#fff',
-  fontSize: '1.2rem',
-  cursor: 'pointer',
-  transition: '0.3s',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center'
+  fontFamily: 'serif',
+  padding: '40px 20px',
+  textAlign: 'center'
 };
 
-const linkStyle = { textDecoration: 'none' };
+const headerStyle = { marginBottom: '40px' };
+const titleStyle = { color: '#D4AF37', fontSize: '2.5rem', textShadow: '2px 2px 4px #000' };
+const subtitleStyle = { color: '#D4AF37', fontSize: '1.2rem' };
+
+const gridStyle: React.CSSProperties = {
+  display: 'grid',
+  gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+  gap: '20px',
+  maxWidth: '900px',
+  margin: '0 auto'
+};
+
+const linkStyle: React.CSSProperties = {
+  display: 'block',
+  padding: '20px',
+  border: '2px solid #D4AF37',
+  borderRadius: '50px',
+  color: '#fff',
+  textDecoration: 'none',
+  fontWeight: 'bold',
+  background: 'rgba(212, 175, 55, 0.1)',
+  transition: '0.3s'
+};
