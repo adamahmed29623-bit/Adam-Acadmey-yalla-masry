@@ -6,7 +6,7 @@ export default function PlacementPage() {
   const router = useRouter();
 
   return (
-    <div style={{ backgroundColor: '#4169E1', minHeight: '100vh', padding: '40px', textAlign: 'center', direction: 'rtl' }}>
+    <div style={{ backgroundColor: '#4169E1', minHeight: '100vh', padding: '40px', textAlign: 'center'as const, direction: 'rtl' }}>
       <h1 style={{ color: '#D4AF37' }}>أين تقف في مملكتنا؟</h1>
       <p style={{ color: '#fff' }}>اختر رتبتك الحالية لنفتح لك الأبواب المناسبة</p>
       
