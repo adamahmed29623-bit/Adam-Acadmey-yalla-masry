@@ -1,0 +1,30 @@
+{
+  "ar": {
+    "welcome": "تحية ملكية من توت عنخ آمون!",
+    "goal_title": "لنبدأ بتحديد هدفك أولاً",
+    "confirm": "أكد هدف التعلم",
+    "points": "نقاط النيل",
+    "feedback_hint": "برافو عليك! إجابتك ممتازة"
+  },
+  "en": {
+    "welcome": "A Royal Greeting from Tutankhamun!",
+    "goal_title": "Let's start by defining your goal first",
+    "confirm": "Confirm Learning Goal",
+    "points": "Nile Points",
+    "feedback_hint": "Bravo! Your answer is excellent"
+  },
+  "zh": {
+    "welcome": "图坦卡蒙的皇家问候！",
+    "goal_title": "让我们首先确定您的学习目标",
+    "confirm": "确认学习目标",
+    "points": "尼罗河积分",
+    "feedback_hint": "太棒了！你的回答非常出色"
+  },
+  "ur": {
+    "welcome": "توت عنخ آمون کی طرف سے شاہی سلام!",
+    "goal_title": "آئیے پہلے اپنا مقصد طے کرتے ہیں",
+    "confirm": "سیکھنے کے مقصد کی تصدیق کریں",
+    "points": "نیل پوائنٹس",
+    "feedback_hint": "براوو! آپ کا جواب بہترین ہے"
+  }
+}
