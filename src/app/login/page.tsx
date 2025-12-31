@@ -14,7 +14,7 @@ export default function LoginPage() {
     border: '3px solid #D4AF37',
     padding: '40px',
     borderRadius: '30px',
-    textAlign: 'center',
+    textAlign: 'center' as const,
     width: '100%',
     maxWidth: '500px',
     background: 'rgba(0,0,0,0.5)',
