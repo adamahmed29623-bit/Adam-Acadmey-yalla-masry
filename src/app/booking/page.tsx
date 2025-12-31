@@ -1,50 +1,104 @@
 "use client";
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Calendar, Clock, CreditCard, ChevronRight, Crown, CheckCircle2 } from 'lucide-react';
+import React, { CSSProperties, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function BookingPage() {
-  const [selectedTime, setSelectedTime] = useState(null);
-  const slots = ["09:00 AM", "11:00 AM", "02:00 PM", "05:00 PM", "08:00 PM", "10:00 PM"];
+  const router = useRouter();
+  const [selectedDate, setSelectedDate] = useState('');
+
+  const containerStyle: CSSProperties = {
+    backgroundColor: '#4169E1',
+    minHeight: '100vh',
+    padding: '40px',
+    textAlign: 'center' as const,
+    direction: 'rtl',
+    color: '#fff'
+  };
+
+  const bookingCard: CSSProperties = {
+    backgroundColor: 'rgba(0, 35, 102, 0.5)',
+    border: '2px solid #D4AF37',
+    borderRadius: '30px',
+    padding: '40px',
+    maxWidth: '600px',
+    margin: '0 auto',
+    boxShadow: '0 15px 40px rgba(0,0,0,0.4)'
+  };
+
+  const sessions = [
+    { id: 1, time: '10:00 AM', type: 'جلسة صباحية - إشراق النيل' },
+    { id: 2, time: '04:00 PM', type: 'جلسة المساء - سحر اللوتس' },
+    { id: 3, time: '09:00 PM', type: 'مجلس الحكماء - سهرة ملكية' }
+  ];
 
   return (
-    <div className="min-h-screen bg-[#000814] text-white p-10 font-sans">
-      <div className="max-w-4xl mx-auto space-y-12">
-        {/* Header Section */}
-        <div className="bg-gradient-to-br from-amber-500 to-amber-700 p-16 rounded-[4rem] text-[#000814] relative overflow-hidden shadow-2xl shadow-amber-500/20">
-          <div className="relative z-10 space-y-4">
-            <h2 className="text-6xl font-black italic tracking-tighter text-white">تأكيد الجلسة الملكية</h2>
-            <p className="text-xl font-bold opacity-90 italic text-white/80">اختاري الموعد الذي يناسب جدولكِ المزدحم</p>
-          </div>
-          <Calendar className="absolute -left-10 -bottom-10 w-64 h-64 opacity-10 rotate-12" />
+    <div style={containerStyle}>
+      <h1 style={{ color: '#D4AF37', fontSize: '2.5rem', marginBottom: '10px' }}>📅 حجز الجلسات الملكية</h1>
+      <p style={{ marginBottom: '40px' }}>اختر موعد لقاء المعلمة لتبدأ رحلة السحر</p>
+
+      <div style={bookingCard}>
+        <div style={{ fontSize: '50px', marginBottom: '20px' }}>🪷</div>
+        <h3 style={{ color: '#D4AF37', marginBottom: '25px' }}>المواعيد المتاحة لهذا الأسبوع</h3>
+        
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+          {sessions.map(session => (
+            <div 
+              key={session.id} 
+              onClick={() => setSelectedDate(session.time)}
+              style={{
+                ...sessionItemStyle,
+                borderColor: selectedDate === session.time ? '#D4AF37' : 'rgba(212, 175, 55, 0.3)',
+                backgroundColor: selectedDate === session.time ? 'rgba(212, 175, 55, 0.2)' : 'transparent'
+              }}
+            >
+              <span style={{ fontWeight: 'bold' }}>{session.time}</span>
+              <span style={{ fontSize: '0.9rem', opacity: 0.8 }}>{session.type}</span>
+            </div>
+          ))}
         </div>
 
-        {/* Slots and Action Section */}
-        <div className="bg-[#001d3d] p-12 rounded-[4rem] border border-white/5 space-y-10">
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
-            {slots.map(slot => (
-              <button 
-                key={slot}
-                onClick={() => setSelectedTime(slot)}
-                className={`py-6 rounded-3xl font-black transition-all border-2 ${
-                  selectedTime === slot ? 'bg-amber-500 border-amber-500 text-[#000814] scale-105 shadow-xl' : 'bg-[#000814] border-white/5 text-slate-500'
-                }`}
-              >
-                {slot}
-              </button>
-            ))}
-          </div>
-
-          <button 
-            disabled={!selectedTime}
-            className={`w-full py-8 rounded-[3rem] font-black text-2xl flex items-center justify-center gap-4 transition-all ${
-              selectedTime ? 'bg-amber-500 text-[#000814] shadow-2xl' : 'bg-white/5 text-slate-700 cursor-not-allowed'
-            }`}
-          >
-            <CreditCard size={28} /> إتمام الحجز والدفع
-          </button>
-        </div>
+        <button 
+          disabled={!selectedDate}
+          onClick={() => alert('تم إرسال طلب الحجز للمملكة بنجاح! 👑')}
+          style={{
+            ...confirmBtnStyle,
+            opacity: selectedDate ? 1 : 0.5,
+            cursor: selectedDate ? 'pointer' : 'not-allowed'
+          }}
+        >
+          تأكيد الحجز الملكي
+        </button>
+        
+        <button 
+          onClick={() => router.push('/academy')}
+          style={{ background: 'none', border: 'none', color: '#fff', marginTop: '20px', cursor: 'pointer', textDecoration: 'underline' }}
+        >
+          العودة للوحة التحكم
+        </button>
       </div>
     </div>
   );
 }
+
+const sessionItemStyle: CSSProperties = {
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  padding: '15px 25px',
+  borderRadius: '15px',
+  border: '1px solid',
+  cursor: 'pointer',
+  transition: '0.3s'
+};
+
+const confirmBtnStyle: CSSProperties = {
+  width: '100%',
+  marginTop: '30px',
+  padding: '15px',
+  borderRadius: '50px',
+  border: 'none',
+  backgroundColor: '#D4AF37',
+  color: '#002366',
+  fontWeight: 'bold',
+  fontSize: '1.2rem'
+};
