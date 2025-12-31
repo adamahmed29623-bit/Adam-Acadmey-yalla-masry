@@ -1,47 +1,39 @@
 "use client";
-import React from 'react';
-import { Crown, Sparkles, ArrowLeft } from 'lucide-react';
+import React, { CSSProperties } from 'react';
 import { useRouter } from 'next/navigation';
 
-export default function QueenWelcome() {
+export default function WelcomePage() {
   const router = useRouter();
 
+  const sectionStyle: CSSProperties = {
+    backgroundColor: '#4169E1',
+    minHeight: '100vh',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    textAlign: 'center',
+    padding: '20px',
+    color: '#fff'
+  };
+
   return (
-    <div className="min-h-screen bg-[#000814] flex items-center justify-center p-6 overflow-hidden relative">
-      {/* هالة ضوئية خلف الأفاتار */}
-      <div className="absolute w-[500px] h-[500px] bg-amber-500/10 rounded-full blur-[120px] animate-pulse"></div>
+    <div style={sectionStyle}>
+      <h1 style={{ fontSize: '3rem', color: '#D4AF37', marginBottom: '10px' }}>أكاديمية نفرتيتي الملكية</h1>
+      <h2 style={{ fontSize: '1.5rem', fontStyle: 'italic', marginBottom: '40px' }}>مملكة اللهجة المصرية: قوة السحر والإبداع</h2>
+      
+      <p style={{ maxWidth: '600px', lineHeight: '1.8', fontSize: '1.2rem', marginBottom: '40px' }}>
+        مرحباً بكِ في أول أكاديمية ملكية متخصصة في إحياء سحر اللغة المصرية. 
+        هنا نصنع المبدعين ونعلم لغة النيل بأسرارها وجاذبيتها.
+      </p>
 
-      <div className="max-w-4xl w-full text-center relative z-10">
-        {/* أفاتار تخيلي للملكة حتشبسوت */}
-        <div className="mb-12 relative inline-block">
-          <div className="w-64 h-64 mx-auto rounded-full border-4 border-amber-500 p-2 shadow-[0_0_50px_rgba(255,195,0,0.3)] overflow-hidden bg-gradient-to-b from-amber-500/20 to-transparent">
-             {/* هنا يمكن وضع صورة الأفاتار الخاص بحتشبسوت */}
-             <Crown size={120} className="text-amber-500 mx-auto mt-16 opacity-50" />
-          </div>
-          <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-amber-500 text-black px-8 py-2 rounded-full font-black italic text-xl shadow-lg">
-            الملكة حتشبسوت
-          </div>
-        </div>
-
-        <div className="space-y-8">
-          <h1 className="text-5xl md:text-7xl font-black italic text-white leading-tight">
-            أهلاً بكِ في <span className="text-amber-500">أرض المجد</span> يا ابنتي
-          </h1>
-          <p className="text-2xl text-slate-300 italic leading-relaxed max-w-2xl mx-auto border-r-4 border-amber-500 pr-6">
-            "من قصر الدير البحري، أحييكِ. لغتكِ هي عنوان رقيّكِ، فكوني كملكات مصر القديمة، فصيحة اللسان، قوية البيان، وراقية الحضور."
-          </p>
-          
-          <div className="pt-10">
-            <button 
-              onClick={() => router.push('/goals')}
-              className="group bg-amber-500 text-black px-16 py-6 rounded-3xl font-black text-2xl hover:scale-110 transition-all flex items-center gap-4 mx-auto shadow-[0_20px_40px_rgba(255,195,0,0.2)]"
-            >
-              للبدء في المسار الملكي
-              <Sparkles className="group-hover:rotate-12 transition-transform" />
-            </button>
-          </div>
-        </div>
+      <div style={{ display: 'flex', gap: '20px' }}>
+        <button onClick={() => router.push('/signup')} style={primaryBtn}>ابدأ رحلتك الملكية</button>
+        <button onClick={() => router.push('/login')} style={secondaryBtn}>تسجيل دخول الأعضاء</button>
       </div>
     </div>
   );
 }
+
+const primaryBtn: CSSProperties = { backgroundColor: '#D4AF37', color: '#002366', padding: '15px 40px', borderRadius: '50px', border: 'none', fontWeight: 'bold', fontSize: '1.2rem', cursor: 'pointer' };
+const secondaryBtn: CSSProperties = { backgroundColor: 'transparent', color: '#D4AF37', padding: '15px 40px', borderRadius: '50px', border: '2px solid #D4AF37', fontWeight: 'bold', fontSize: '1.2rem', cursor: 'pointer' };
