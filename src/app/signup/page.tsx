@@ -1,85 +1,79 @@
 "use client";
-import React, { useState } from 'react';
-import { Crown, User, Mail, Lock, Sparkles, ChevronDown } from 'lucide-react';
+import React, { CSSProperties } from 'react';
 import { useRouter } from 'next/navigation';
 
-export default function SignUpPage() {
+export default function SignupPage() {
   const router = useRouter();
-  const [selectedTitle, setSelectedTitle] = useState("");
 
-  const royalTitles = [
-    { name: "نفرتيتي", meaning: "الجميلة أتت" },
-    { name: "ميريت آمون", meaning: "محبوبة آمون" },
-    { name: "تي", meaning: "المحبوبة العظيمة" },
-    { name: "كليوباترا", meaning: "مجد أبيها" },
-    { name: "نفرتاري", meaning: "جميلة الجميلات" }
-  ];
+  const containerStyle: CSSProperties = {
+    backgroundColor: '#4169E1', // الأزرق الملكي المعتمد بدلاً من الكحلي
+    minHeight: '100vh',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: '20px',
+    direction: 'rtl'
+  };
+
+  const cardStyle: CSSProperties = {
+    border: '3px solid #D4AF37',
+    padding: '40px',
+    borderRadius: '30px',
+    textAlign: 'center', // تصحيح لتجنب خطأ TextAlign
+    width: '100%',
+    maxWidth: '500px',
+    background: 'rgba(0,0,0,0.5)',
+    boxShadow: '0 0 20px #D4AF37'
+  };
+
+  const handleSignup = () => {
+    // بعد التسجيل بنجاح، نوجه التلميذ مباشرة لصفحة "الأهداف" لتبدأ الرحلة
+    router.push('/goals');
+  };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6 bg-transparent overflow-hidden">
-      {/* خلفية ملكية خافتة */}
-      <div className="absolute top-0 left-0 w-full h-full opacity-5 pointer-events-none flex items-center justify-center">
-        <Crown size={800} className="text-amber-500" />
-      </div>
+    <div style={containerStyle}>
+      <div style={cardStyle}>
+        <h2 style={{ color: '#D4AF37', fontSize: '1.8rem' }}>انضم لمملكة اللهجة المصرية</h2>
+        <p style={{ color: '#fff', marginBottom: '25px' }}>كن جزءاً من قوة السحر والإبداع</p>
 
-      <div className="w-full max-w-2xl bg-white/5 border border-amber-500/10 p-12 rounded-[4rem] backdrop-blur-2xl shadow-2xl relative z-10">
-        <div className="text-center mb-10">
-          <Sparkles className="mx-auto text-amber-500 mb-4" size={40} />
-          <h1 className="text-4xl font-black italic">ميثاق الانتساب</h1>
-          <p className="text-slate-400 mt-2 italic">اختاري لقبكِ الفرعوني لتُعرفي به في ردهات الأكاديمية</p>
-        </div>
+        <input type="text" placeholder="الاسم الملكي الكامل" style={inputStyle} />
+        <input type="email" placeholder="البريد الإلكتروني" style={inputStyle} />
+        <input type="password" placeholder="كلمة السر الملكية" style={inputStyle} />
+        
+        <select style={inputStyle}>
+          <option value="">نوع العضوية</option>
+          <option value="student">تلميذ</option>
+          <option value="parent">ولي أمر</option>
+          <option value="teacher">معلمة</option>
+        </select>
 
-        <form className="space-y-6">
-          {/* قسم اختيار الاسم المستعار */}
-          <div className="space-y-3">
-            <label className="text-[10px] font-black text-amber-500 uppercase tracking-widest mr-4">اللقب الملكي المستعار</label>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-              {royalTitles.map((title) => (
-                <button
-                  key={title.name}
-                  type="button"
-                  onClick={() => setSelectedTitle(title.name)}
-                  className={`p-4 rounded-2xl border transition-all text-sm font-bold italic ${
-                    selectedTitle === title.name 
-                    ? 'border-amber-500 bg-amber-500 text-black shadow-[0_0_20px_rgba(255,195,0,0.3)]' 
-                    : 'border-white/10 bg-white/5 hover:border-amber-500/50'
-                  }`}
-                >
-                  {title.name}
-                  <p className={`text-[8px] mt-1 ${selectedTitle === title.name ? 'text-black/70' : 'text-slate-500'}`}>
-                    ({title.meaning})
-                  </p>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
-            <div className="relative group">
-              <User className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
-              <input type="text" placeholder="الاسم الحقيقي (سري)" className="w-full bg-white/5 border border-white/10 p-5 pl-12 rounded-2xl outline-none focus:border-amber-500 text-white font-bold" />
-            </div>
-
-            <div className="relative group">
-              <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
-              <input type="email" placeholder="البريد الإلكتروني" className="w-full bg-white/5 border border-white/10 p-5 pl-12 rounded-2xl outline-none focus:border-amber-500 text-white font-bold" />
-            </div>
-          </div>
-
-          <div className="relative group">
-            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
-            <input type="password" placeholder="كلمة المرور" className="w-full bg-white/5 border border-white/10 p-5 pl-12 rounded-2xl outline-none focus:border-amber-500 text-white font-bold" />
-          </div>
-
-          <button 
-            type="submit"
-            className="w-full bg-amber-500 text-black py-6 rounded-3xl font-black text-2xl hover:scale-[1.03] transition-all shadow-xl mt-6 flex items-center justify-center gap-3"
-          >
-            <Crown size={24} />
-            تأكيد الانتساب كـ {selectedTitle || "أميرة"}
-          </button>
-        </form>
+        <button onClick={handleSignup} style={signupBtnStyle}>إنشاء الهوية الملكية</button>
       </div>
     </div>
   );
 }
+
+const inputStyle: CSSProperties = {
+  display: 'block',
+  width: '100%',
+  margin: '15px 0',
+  padding: '15px',
+  borderRadius: '15px',
+  border: '1px solid #D4AF37',
+  fontSize: '1rem',
+  backgroundColor: '#fff'
+};
+
+const signupBtnStyle: CSSProperties = {
+  width: '100%',
+  backgroundColor: '#D4AF37',
+  color: '#002366',
+  padding: '15px',
+  border: 'none',
+  borderRadius: '50px',
+  fontWeight: 'bold',
+  fontSize: '1.2rem',
+  cursor: 'pointer',
+  marginTop: '10px'
+};
