@@ -13,7 +13,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ar" dir="rtl">
-      <body style={{ margin: 0, padding: 0, backgroundColor: '#002366' }}>
+      <body style={{ margin: 0, padding: 0, backgroundColor: '#4169E1' }}>
         {/* هذا هو المكان الذي ستظهر فيه الـ 14 صفحة التي بناها النظام */}
         {children}
       </body>
