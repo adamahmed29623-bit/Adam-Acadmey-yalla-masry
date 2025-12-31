@@ -13,14 +13,13 @@ export default function GoalsPage() {
     alignItems: 'center',
     justifyContent: 'center',
     padding: '20px',
-    textAlign: 'center',
-    direction: 'rtl'
+    textAlign: 'center'
   };
 
   const goals = [
-    { id: 'fluency', title: 'إتقان اللهجة المصرية', icon: '🗣️' },
-    { id: 'culture', title: 'فهم الثقافة والقيم', icon: '🏺' },
-    { id: 'business', title: 'الاحتراف العملي', icon: '💼' }
+    { id: 1, title: 'إتقان اللهجة المصرية', icon: '🗣️' },
+    { id: 2, title: 'فهم الثقافة والقيم', icon: '🏺' },
+    { id: 3, title: 'الاحتراف العملي', icon: '💼' }
   ];
 
   return (
@@ -30,7 +29,7 @@ export default function GoalsPage() {
         {goals.map(goal => (
           <button 
             key={goal.id} 
-            onClick={() => router.push('/placement-test')} // ينتقل لصفحة المستوى
+            onClick={() => router.push('/placement-test')} // ينتقل للمحطة الثالثة: المستوى
             style={goalBtnStyle}
           >
             <span style={{ fontSize: '24px', marginLeft: '10px' }}>{goal.icon}</span>
@@ -50,7 +49,6 @@ const goalBtnStyle: CSSProperties = {
   border: '2px solid #D4AF37',
   fontSize: '1.2rem',
   cursor: 'pointer',
-  transition: '0.3s',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center'
