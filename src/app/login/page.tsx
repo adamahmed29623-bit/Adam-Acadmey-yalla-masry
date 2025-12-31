@@ -1,34 +1,47 @@
 "use client";
-import React from 'react';
-import { motion } from 'framer-motion';
-import { Crown, Lock, User } from 'lucide-react';
+import React, { useState } from 'react';
 
-export default function RoyalLogin() {
+export default function LoginPage() {
+  const [role, setRole] = useState('student');
+
   return (
-    <main className="min-h-screen w-full bg-[#000814] flex items-center justify-center p-6">
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md bg-white/5 backdrop-blur-xl border border-amber-500/20 p-10 rounded-[2.5rem] text-center shadow-[0_0_50px_rgba(212,175,55,0.1)]"
-      >
-        <Crown className="w-16 h-16 text-amber-500 mx-auto mb-6" />
-        <h2 className="text-3xl font-black text-white mb-2 tracking-tight">دخول الرواق الملكي</h2>
-        <p className="text-amber-500/60 mb-8 italic">أهلاً بيكِ يا ملكة في بيتك الثاني</p>
-
-        <div className="space-y-4 text-right">
-          <div className="relative">
-            <input type="text" placeholder="الاسم الملكي" className="w-full bg-black/40 border border-white/10 p-4 pr-12 rounded-2xl text-white focus:border-amber-500 outline-none transition-all" />
-            <User className="absolute right-4 top-4 text-amber-500/40" size={20} />
-          </div>
-          <div className="relative">
-            <input type="password" placeholder="كلمة المرور" className="w-full bg-black/40 border border-white/10 p-4 pr-12 rounded-2xl text-white focus:border-amber-500 outline-none transition-all" />
-            <Lock className="absolute right-4 top-4 text-amber-500/40" size={20} />
-          </div>
-          <button className="w-full py-4 bg-amber-500 text-black font-black rounded-2xl text-xl hover:bg-amber-400 shadow-lg shadow-amber-500/20 transition-all">
-            دخول
-          </button>
+    <div style={containerStyle}>
+      <div style={cardStyle}>
+        {/* قناع توت عنخ آمون الذهبي */}
+        <div style={maskContainer}>
+          <span style={{ fontSize: '80px' }}>🎭</span> 
+          {/* يمكنك استبدال الايموجي برابط صورة القناع الخاصة بكِ لاحقاً */}
         </div>
-      </motion.div>
-    </main>
+
+        <h2 style={royalTitle}>سجل لدخول مملكة اللهجة المصرية</h2>
+        <h3 style={magicText}>قوة السحر والإبداع</h3>
+        
+        {/* اختيار الفئة */}
+        <div style={roleSelector}>
+          <button onClick={() => setRole('teacher')} style={role === 'teacher' ? activeBtn : inactiveBtn}>المعلمات</button>
+          <button onClick={() => setRole('parent')} style={role === 'parent' ? activeBtn : inactiveBtn}>أولياء الأمور</button>
+          <button onClick={() => setRole('student')} style={role === 'student' ? activeBtn : inactiveBtn}>التلاميذ</button>
+        </div>
+
+        <div style={{ margin: '20px 0' }}>
+          <input type="text" placeholder="الاسم الملكي" style={inputStyle} />
+          <input type="password" placeholder="كلمة السر" style={inputStyle} />
+        </div>
+        
+        <button style={loginBtnStyle}>فتح بوابات المملكة</button>
+      </div>
+    </div>
   );
 }
+
+// التنسيقات الملكية المحدثة
+const containerStyle = { backgroundColor: '#002366', minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '20px', fontFamily: 'serif' };
+const cardStyle = { border: '3px solid #D4AF37', padding: '40px', borderRadius: '30px', textAlign: 'center', width: '100%', maxWidth: '500px', background: 'rgba(0,0,0,0.5)', boxShadow: '0 0 20px #D4AF37' };
+const maskContainer = { marginBottom: '10px', filter: 'drop-shadow(0 0 10px #D4AF37)' };
+const royalTitle = { color: '#D4AF37', fontSize: '1.8rem', margin: '10px 0' };
+const magicText = { color: '#fff', fontSize: '1.2rem', fontStyle: 'italic', marginBottom: '30px', letterSpacing: '1px' };
+const roleSelector = { display: 'flex', justifyContent: 'center', gap: '15px', marginBottom: '25px' };
+const inputStyle = { display: 'block', width: '100%', margin: '15px 0', padding: '15px', borderRadius: '15px', border: '1px solid #D4AF37', outline: 'none', fontSize: '1rem' };
+const loginBtnStyle = { width: '100%', backgroundColor: '#D4AF37', color: '#002366', padding: '15px', border: 'none', borderRadius: '50px', cursor: 'pointer', fontWeight: 'bold', fontSize: '1.2rem', boxShadow: '0 4px 10px rgba(0,0,0,0.3)' };
+const activeBtn = { backgroundColor: '#D4AF37', color: '#002366', padding: '10px 20px', borderRadius: '25px', border: 'none', cursor: 'pointer', fontWeight: 'bold' };
+const inactiveBtn = { backgroundColor: 'transparent', color: '#D4AF37', padding: '10px 20px', borderRadius: '25px', border: '1px solid #D4AF37', cursor: 'pointer' };
