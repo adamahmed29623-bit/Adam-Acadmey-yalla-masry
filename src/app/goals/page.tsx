@@ -10,7 +10,7 @@ export default function GoalsPage() {
     minHeight: '100vh',
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center',
+    alignItems: 'center' as const,
     justifyContent: 'center',
     padding: '20px',
     textAlign: 'center'
