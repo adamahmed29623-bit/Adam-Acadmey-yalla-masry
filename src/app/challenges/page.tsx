@@ -1,7 +1,6 @@
 "use client";
 import { useState } from 'react';
-import { processChallenge } from '@/lib/gemini'; // استدعاء المساعد الذكي
-
+import { processChallenge } from '../../lib/gemini'; // استدعاء المساعد الذكي
 export default function ChallengesPage() {
   const [userAnswer, setUserAnswer] = useState("");
   const [feedback, setFeedback] = useState("");
