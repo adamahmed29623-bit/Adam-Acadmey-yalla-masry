@@ -1,9 +1,13 @@
 import type { Metadata } from "next";
+import { Inter } from "next/font/google";
 import "./globals.css";
+import Header from "@/components/Header"; // استدعاء الهيدر الذي وضعناه في components
+
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Yalla Masry: Speak Like Royalty",
-  description: "Master the Egyptian dialect for daily life",
+  title: "Nefertiti Royal Academy",
+  description: "A unique identity for learning Egyptian Arabic",
 };
 
 export default function RootLayout({
@@ -12,9 +16,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ar" dir="rtl">
-      <body style={{ margin: 0, padding: 0, backgroundColor: '#f9f9f9' }}>
-        {children}
+    <html lang="en">
+      <body className={inter.className}>
+        {/* الهيدر يظهر هنا ليكون ثابتاً في كل الصفحات */}
+        <Header /> 
+        
+        <main className="min-h-screen bg-gray-50">
+          {children}
+        </main>
+        
+        {/* يمكنك إضافة Footer ملكي هنا مستقبلاً */}
       </body>
     </html>
   );
