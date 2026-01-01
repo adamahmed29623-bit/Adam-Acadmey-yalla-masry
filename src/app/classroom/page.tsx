@@ -1,34 +1,39 @@
 "use client";
-import React from 'react';
-import { motion } from 'framer-motion';
-import { PlayCircle, BookOpen, Crown, Sparkles } from 'lucide-react';
+import React, { useState } from 'react';
 
-export default function ClassroomPage() {
+export default function RoyalClassroom() {
   return (
-    <div className="min-h-screen bg-[#000814] text-white p-10">
-      <div className="max-w-6xl mx-auto space-y-16">
-        <div className="flex justify-between items-end border-b border-white/5 pb-10">
-          <div>
-            <h2 className="text-7xl font-black italic tracking-tighter">قاعة الدروس</h2>
-            <p className="text-amber-500 font-bold mt-4 tracking-widest uppercase text-sm">تم تحميل "رحلة نوف" المحدثة بنجاح</p>
+    <div className="min-h-screen bg-blue-900 text-white p-6">
+      <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        {/* شاشة الفيديو (أو رابط الاجتماع) */}
+        <div className="lg:col-span-2 bg-black rounded-3xl aspect-video flex items-center justify-center border-4 border-yellow-600 shadow-2xl relative">
+          <p className="text-yellow-500 font-bold">Waiting for Teacher Amira... 🎥</p>
+          <div className="absolute bottom-4 left-4 bg-red-600 px-4 py-1 rounded-full text-xs animate-pulse">
+            LIVE SESSION
           </div>
-          <Sparkles className="text-amber-500" size={48} />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-          {[1, 2].map((i) => (
-            <motion.div 
-              whileHover={{ scale: 1.02 }}
-              key={i} 
-              className="aspect-video bg-[#001d3d] rounded-[4rem] border-2 border-amber-500/10 flex flex-col items-center justify-center group cursor-pointer relative overflow-hidden"
-            >
-              <PlayCircle size={80} className="text-amber-500 group-hover:scale-110 transition-transform" />
-              <div className="absolute bottom-10 right-10">
-                <h3 className="text-3xl font-black italic">الدرس {i}: سحر البدايات</h3>
-              </div>
-            </motion.div>
-          ))}
+        {/* لوحة المعلومات الجانبية */}
+        <div className="bg-white text-blue-900 rounded-3xl p-6 shadow-xl">
+          <h2 className="text-2xl font-bold mb-4 border-b-2 pb-2">📖 Today's Lesson</h2>
+          <div className="space-y-4">
+            <div className="bg-yellow-50 p-4 rounded-xl border-l-4 border-yellow-600">
+              <p className="font-bold text-sm text-yellow-800">Topic:</p>
+              <p className="font-medium text-lg">Buying Vegetables (At the Market)</p>
+            </div>
+            
+            <div className="bg-green-50 p-4 rounded-xl border-l-4 border-green-600">
+              <p className="font-bold text-sm text-green-800">Current Challenge:</p>
+              <p className="text-sm">How to ask for 0.25kg of Tomatoes? 🍅</p>
+            </div>
+          </div>
+
+          <button className="w-full mt-10 bg-blue-700 text-white py-4 rounded-2xl font-bold hover:bg-blue-800 transition">
+            Enter Zoom/Meet Class
+          </button>
         </div>
+
       </div>
     </div>
   );
