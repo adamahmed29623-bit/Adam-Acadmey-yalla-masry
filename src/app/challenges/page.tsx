@@ -1,80 +1,68 @@
 "use client";
 import { useState } from 'react';
-import { processChallenge } from '../../lib/gemini'; // استدعاء المساعد الذكي
+import { processChallenge } from '../../lib/gemini'; // المسار الذي نجح معكِ
+
+const challengesData = [
+  {
+    id: 1,
+    title: "🛒 Grocery Challenge (Bananas)",
+    instruction: "How do you ask for 1kg of Bananas in Egyptian?",
+    hint: "Use 'Ayyez' (Male) or 'Ayza' (Female).",
+    reward: 50
+  },
+  {
+    id: 2,
+    title: "🍅 Market Challenge (Tomatoes)",
+    instruction: "How do you ask for 0.25kg of Tomatoes?",
+    hint: "0.25kg is called 'Rob'e Kilo'.",
+    reward: 50
+  }
+];
+
 export default function ChallengesPage() {
-  const [userAnswer, setUserAnswer] = useState("");
+  const [currentIdx, setCurrentIdx] = useState(0);
+  const [answer, setAnswer] = useState("");
   const [feedback, setFeedback] = useState("");
-  const [language, setLanguage] = useState("en"); // افتراضياً للطالب الأمريكي/الأوروبي
+  const currentChallenge = challengesData[currentIdx];
 
-  // مصفوفة الأوامر المترجمة (الجسر اللغوي)
-  const translations = {
-    en: { instruction: "Challenge: How do you ask for 2kg of Tomatoes?", btn: "Submit Answer", placeholder: "Type in Egyptian Arabic..." },
-    zh: { instruction: "挑战：你如何 cross 2公斤西红柿？", btn: "提交回答", placeholder: "用埃及阿拉伯语输入..." },
-    ur: { instruction: "چیلنج: آپ 2 کلو ٹماٹر کیسے مانگیں گے؟", btn: "جواب جمع کریں", placeholder: "مصری عربی میں لکھیں..." }
-  };
-
-  const handleSubmit = async () => {
-    setFeedback("Wait... Royal Tutor is checking... ⏳");
-    
-    // إرسال الإجابة لـ Gemini للتصحيح بلغة الطالب
-    const result = await processChallenge(
-      userAnswer, 
-      language, 
-      "Grocery Store: Asking for 2kg of tomatoes"
-    );
+  const handleVerify = async () => {
+    setFeedback("Checking with the Royal Tutor... ⏳");
+    const result = await processChallenge(answer, "English", currentChallenge.title);
     setFeedback(result);
   };
 
   return (
-    <div className="p-8 text-center bg-gold-gradient min-h-screen">
-      <h1 className="text-3xl font-bold mb-6">🏛️ Nile Challenges</h1>
-      
-      {/* اختيار لغة الأوامر (للطالب) */}
-      <select 
-        onChange={(e) => setLanguage(e.target.value)}
-        className="mb-8 p-2 rounded border-2 border-yellow-600"
-      >
-        <option value="en">English (USA/Europe)</option>
-        <option value="zh">Chinese (中国)</option>
-        <option value="ur">Urdu (اردو)</option>
-      </select>
-
-      <div className="max-w-md mx-auto bg-white p-6 rounded-xl shadow-2xl">
-        {/* تعليمات التحدي تظهر بلغة الطالب */}
-        <p className="text-xl mb-4 font-semibold text-blue-900">
-          {translations[language].instruction}
-        </p>
-
-        {/* زر النطق المصري الثابت */}
-        <button 
-          onClick={() => alert("Playing Egyptian Audio: 'عايز اتنين كيلو طماطم'")}
-          className="bg-blue-500 text-white px-4 py-2 rounded-full mb-4 hover:bg-blue-700"
-        >
-          🔊 Listen to Native Egyptian
-        </button>
-
-        <input 
-          type="text"
-          value={userAnswer}
-          onChange={(e) => setUserAnswer(e.target.value)}
-          placeholder={translations[language].placeholder}
-          className="w-full p-3 border-2 border-gray-300 rounded mb-4"
-        />
-
-        <button 
-          onClick={handleSubmit}
-          className="bg-green-600 text-white w-full py-3 rounded-lg font-bold hover:bg-green-700 transition"
-        >
-          {translations[language].btn}
-        </button>
-
-        {/* رد Gemini المترجم للغة الطالب مع شرح "عايز/عايزة" */}
-        {feedback && (
-          <div className="mt-6 p-4 bg-yellow-50 border-l-4 border-yellow-500 text-left text-gray-800">
-            <p className="whitespace-pre-wrap">{feedback}</p>
-          </div>
-        )}
+    <div className="p-6 max-w-2xl mx-auto bg-white shadow-2xl rounded-3xl mt-10 text-right">
+      <div className="flex justify-between items-center mb-6">
+        <span className="text-yellow-600 font-bold">🏆 +{currentChallenge.reward} Pt</span>
+        <h1 className="text-2xl font-bold text-green-900">Yalla Masry Academy</h1>
       </div>
+
+      <div className="bg-green-50 p-6 rounded-2xl mb-6 border-2 border-green-200">
+        <h2 className="text-xl font-bold mb-2 text-green-800">{currentChallenge.title}</h2>
+        <p className="text-gray-700 mb-4">{currentChallenge.instruction}</p>
+        <p className="text-sm text-blue-600 italic">💡 Hint: {currentChallenge.hint}</p>
+      </div>
+
+      <textarea 
+        className="w-full p-4 border-2 border-gray-100 rounded-2xl mb-4 h-32 outline-none focus:border-green-500"
+        placeholder="اكتب إجابتك بالعامية المصرية هنا..."
+        value={answer}
+        onChange={(e) => setAnswer(e.target.value)}
+      />
+
+      <button 
+        onClick={handleVerify}
+        className="w-full bg-green-700 text-white py-4 rounded-2xl font-bold hover:bg-green-800 transition shadow-lg"
+      >
+        أرسل الإجابة وقيمها الملكية
+      </button>
+
+      {feedback && (
+        <div className="mt-8 p-6 bg-blue-50 border-r-4 border-blue-500 rounded-xl">
+          <p className="whitespace-pre-wrap text-gray-800 leading-relaxed">{feedback}</p>
+        </div>
+      )}
     </div>
   );
 }
