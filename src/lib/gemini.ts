@@ -1,32 +1,23 @@
+
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY || "");
 
 export const royalTeacherModel = genAI.getGenerativeModel({
   model: "gemini-pro",
-  generationConfig: {
-    temperature: 0.9,
-    topK: 1,
-    topP: 1,
-    maxOutputTokens: 2048,
-  },
 });
 
-export async function askRoyalTeacher(prompt: string) {
-  const chat = royalTeacherModel.startChat({
-    history: [
-      {
-        role: "user",
-        parts: "You are the Royal Teacher of Yalla Masry Academy. Always address students with respect and use Egyptian history metaphors.",
-      },
-      {
-        role: "model",
-        parts: "Understood, Your Majesty. I am ready to guide the students of the Nile.",
-      },
-    ],
-  });
-
-  const result = await chat.sendMessage(prompt);
+// الوظيفة المطلوبة في صفحة التحديات
+export async function processChallenge(userAnswer: string) {
+  const prompt = `As the Royal Teacher, evaluate this answer for an Egyptian history challenge: ${userAnswer}. Provide feedback and award points if correct.`;
+  const result = await royalTeacherModel.generateContent(prompt);
   const response = await result.response;
   return response.text();
-} // تم إغلاق القوس بنجاح هنا لإنهاء الخطأ في السطر 22
+}
+
+// الوظيفة المطلوبة للدردشة العامة
+export async function askRoyalTeacher(prompt: string) {
+  const result = await royalTeacherModel.generateContent(prompt);
+  const response = await result.response;
+  return response.text();
+}
