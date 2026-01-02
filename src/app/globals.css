@@ -1,25 +1,21 @@
-/* التنسيقات بالأزرق الملكي والذهب */
-:root {
-  /* الدرجة الدقيقة للأزرق الملكي المشع */
-  --royal-blue: #4169E1; 
-  --gold: #D4AF37;
-  --white: #ffffff;
-  --deep-royal: #002366; /* للظلال فقط */
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 body {
+  background-color: #f0f4f8; /* لون مريح للعين */
+  line-height: 1.8; /* يمنع تداخل السطور التي رأيناها */
+  color: #1e3a8a; /* الأزرق الملكي */
   margin: 0;
   padding: 0;
-  /* الخلفية الآن بالأزرق الملكي الفاخر */
-  background: linear-gradient(135deg, var(--royal-blue) 0%, var(--deep-royal) 100%);
-  color: var(--white);
-  font-family: 'serif';
-  direction: rtl;
 }
 
-/* التنسيق الخاص بقناع توت والعبارات السحرية */
-.magic-text {
-  color: var(--gold);
-  text-shadow: 0 0 10px rgba(212, 175, 55, 0.8);
-  font-weight: bold;
+/* تنظيم بطاقات المعلمات لتظهر بشكل منفصل ومرتب */
+.teacher-card {
+  background: white;
+  border-radius: 20px;
+  padding: 25px;
+  margin-bottom: 30px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  border-left: 5px solid #d4af37; /* لمسة ذهبية */
 }
