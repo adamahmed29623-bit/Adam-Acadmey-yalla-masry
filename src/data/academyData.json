@@ -1,0 +1,48 @@
+{
+  "instructors": [
+    {
+      "id": 1,
+      "name": "أميرة نفرتيتي",
+      "specialty": "اللغة المصرية",
+      "avatar": "/nefertiti.png",
+      "schedule": [
+        { "day": "الاثنين", "time": "10:00 AM" },
+        { "day": "الأربعاء", "time": "2:00 PM" }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "راميس الثالث",
+      "specialty": "التاريخ الفرعوني",
+      "avatar": "/ramesses.png",
+      "schedule": [
+        { "day": "الثلاثاء", "time": "11:00 AM" },
+        { "day": "الخميس", "time": "3:00 PM" }
+      ]
+    }
+  ],
+  "challenges": [
+    {
+      "id": 1,
+      "goal": "travel",
+      "sentence": "انا عايز اروح ميدان التحرير",
+      "translation": "I want to go to Tahrir Square",
+      "questions": [{
+        "question": "اطلب من سائق التاكسي يوديك الفندق",
+        "options": ["انا عايز الفندق", "خدنى الفندق", "انا عايز اروح الفندق"],
+        "correct": 2
+      }]
+    },
+    {
+      "id": 2,
+      "goal": "work",
+      "sentence": "انا عايز مقابلة مع المدير",
+      "translation": "I want to meet the manager",
+      "questions": [{
+        "question": "اسأل عن مواعيد العمل",
+        "options": ["ايه مواعيد العمل", "مواعيد العمل ايه", "متى العمل"],
+        "correct": 0
+      }]
+    }
+  ]
+}
