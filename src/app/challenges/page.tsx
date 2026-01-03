@@ -1,99 +1,70 @@
-'use client'; // ضروري جداً لتفعيل الأزرار والتفاعل
-
+'use client';
 import { useState } from 'react';
 
-// البيانات التي أرسلتِها سابقاً بتنسيق ملكي منظم
-const challengesData = [
+const challenges = [
   {
     id: 1,
-    goal: "travel",
-    title: "تحدي السفر: ميدان التحرير 🚕",
-    sentence: "انا عايز اروح ميدان التحرير",
-    translation: "I want to go to Tahrir Square",
-    questions: [
-      {
-        question: "اطلب من سائق التاكسي يوديك الفندق",
-        options: ["انا عايز الفندق", "خدنى الفندق", "انا عايز اروح الفندق"],
-        correct: 2
-      }
-    ]
+    title: "تحدي الوصول: مطار القاهرة ✈️",
+    scenario: "أنت الآن في المطار، وعليك طلب تاكسي للذهاب للفندق. ماذا تقول؟",
+    options: ["I want a taxi", "عايز تاكسي لو سمحت", "Taxi please"],
+    correct: "عايز تاكسي لو سمحت",
+    hint: "في مصر نستخدم كلمة 'عايز' للتعبير عن الرغبة"
   },
   {
     id: 2,
-    goal: "work",
-    title: "تحدي العمل: مقابلة المدير 👔",
-    sentence: "انا عايز مقابله مع المدير",
-    translation: "I want to meet the manager",
-    questions: [
-      {
-        question: "اسأل عن مواعيد العمل",
-        options: ["ايه مواعيد العمل", "مواعيد العمل ايه", "متى العمل"],
-        correct: 0
-      }
-    ]
+    title: "تحدي وسط البلد: ميدان التحرير 🏛️",
+    scenario: "تريد شراء 'كشري' من محل شهير، كيف تطلب الطبق الكبير؟",
+    options: ["Big Koshary", "واحد كشري كبير", "Give me koshary"],
+    correct: "واحد كشري كبير",
+    hint: "نبدأ بالرقم 'واحد' ثم اسم الوجبة"
   }
 ];
 
 export default function ChallengesPage() {
-  const [currentChallenge, setCurrentChallenge] = useState(0);
-  const [showResult, setShowResult] = useState(false);
-  const [message, setMessage] = useState("");
+  const [currentStep, setCurrentStep] = useState(0);
+  const [feedback, setFeedback] = useState('');
 
-  const handleAnswer = (index: number) => {
-    if (index === challengesData[currentChallenge].questions[0].correct) {
-      setMessage("أحسنت يا بطل النيل! إجابة ملكية صحيحة 👑");
+  const checkAnswer = (answer: string) => {
+    if (answer === challenges[currentStep].correct) {
+      setFeedback('✅ أحسنت يا ملك! إجابة ملكية صحيحة.');
+      setTimeout(() => {
+        if (currentStep < challenges.length - 1) {
+          setCurrentStep(currentStep + 1);
+          setFeedback('');
+        } else {
+          setFeedback('🏆 مبروك! لقد اجتزت المستوى الأول بنجاح.');
+        }
+      }, 2000);
     } else {
-      setMessage("حاول مرة أخرى، حتى العظماء يخطئون.. ركز في اللهجة المصرية 🏺");
-    }
-    setShowResult(true);
-  };
-
-  const nextChallenge = () => {
-    if (currentChallenge < challengesData.length - 1) {
-      setCurrentChallenge(currentChallenge + 1);
-      setShowResult(false);
-    } else {
-      setMessage("مبروك! لقد أتممت المستوى الأول بنجاح. اذهب للمتجر لاستلام مكافئتك!");
+      setFeedback(`❌ حاول ثانية.. تذكر: ${challenges[currentStep].hint}`);
     }
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 p-8 text-right" dir="rtl">
-      <h1 className="text-3xl font-black text-blue-900 mb-8 border-b-4 border-yellow-500 pb-2 inline-block">
-        تحديات الأكاديمية الملكية 🏛️
-      </h1>
-
-      <div className="bg-white p-8 rounded-3xl shadow-2xl border-2 border-blue-100 max-w-2xl mx-auto">
-        <h2 className="text-xl font-bold text-yellow-600 mb-4">{challengesData[currentChallenge].title}</h2>
-        <div className="bg-blue-900 text-white p-6 rounded-2xl mb-6">
-          <p className="text-2xl mb-2 font-black italic">"{challengesData[currentChallenge].sentence}"</p>
-          <p className="text-blue-200">{challengesData[currentChallenge].translation}</p>
+    <div className="min-h-screen bg-slate-50 p-8">
+      <div className="max-w-2xl mx-auto bg-white rounded-3xl shadow-2xl p-10 border-b-8 border-blue-900">
+        <h1 className="text-3xl font-black text-slate-900 mb-6 text-center">التحديات الملكية 🏺</h1>
+        
+        <div className="mb-8">
+          <h2 className="text-xl font-bold text-amber-700 mb-2">{challenges[currentStep].title}</h2>
+          <p className="text-lg text-slate-700 leading-relaxed">{challenges[currentStep].scenario}</p>
         </div>
 
-        <div className="space-y-4">
-          <p className="text-lg font-bold text-slate-700 mb-4">
-            {challengesData[currentChallenge].questions[0].question}
-          </p>
-          {challengesData[currentChallenge].questions[0].options.map((option, index) => (
-            <button
-              key={index}
-              onClick={() => handleAnswer(index)}
-              className="w-full p-4 text-right bg-slate-100 hover:bg-yellow-100 border-2 border-slate-200 rounded-xl transition-all font-bold"
+        <div className="grid gap-4">
+          {challenges[currentStep].options.map(option => (
+            <button 
+              key={option}
+              onClick={() => checkAnswer(option)}
+              className="py-4 px-6 rounded-2xl border-2 border-slate-200 font-bold hover:bg-yellow-50 hover:border-yellow-400 transition-all text-right"
             >
-              {index + 1}. {option}
+              {option}
             </button>
           ))}
         </div>
 
-        {showResult && (
-          <div className="mt-8 p-6 bg-yellow-50 rounded-2xl border-2 border-yellow-200 text-center animate-bounce">
-            <p className="text-xl font-black text-blue-900 mb-4">{message}</p>
-            <button 
-              onClick={nextChallenge}
-              className="bg-blue-900 text-white px-8 py-2 rounded-full font-bold"
-            >
-              التحدي التالي ➡️
-            </button>
+        {feedback && (
+          <div className="mt-8 p-4 rounded-xl bg-slate-100 text-center font-bold text-blue-900 animate-bounce">
+            {feedback}
           </div>
         )}
       </div>
