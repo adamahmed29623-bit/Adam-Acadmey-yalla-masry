@@ -1,38 +1,66 @@
-"use client";
-import React from 'react';
+'use client';
+import { useState, useEffect } from 'react';
+import Navbar from '../../components/Navbar';
 
 export default function StudentDashboard() {
-  const stats = [
-    { label: "Nile Points", value: "550 Pt", icon: "🏺" },
-    { label: "Rank", value: "Royal Prince", icon: "👑" }
-  ]; // تأكدي أن هذا السطر ينتهي هنا ولا يوجد قوس زائد بعده
+  // بيانات افتراضية للطالب - سنربطها لاحقاً بقاعدة البيانات
+  const [studentData, setStudentData] = useState({
+    name: "نفرتيتي الصغيرة",
+    level: 1,
+    nilePoints: 150,
+    completedChallenges: ["مطار القاهرة", "ميدان التحرير"],
+    cartoucheUnlocked: true
+  });
 
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
-      <h1 className="text-3xl font-bold text-blue-900 mb-8">Welcome, Royal Student! 👑</h1>
+    <div className="min-h-screen bg-stone-100">
+      <Navbar />
       
-      {/* قسم الهدية المجانية من Shopify */}
-      <div className="bg-gradient-to-r from-yellow-600 to-yellow-400 rounded-3xl p-8 text-white shadow-2xl mb-10 text-center border-4 border-white">
-          <h2 className="text-2xl font-black mb-2">🎁 SPECIAL GIFT FROM NEFERTITI!</h2>
-          <p className="mb-6 font-bold text-blue-900">Get your Custom Royal Cartouche for FREE (3 Days Only)!</p>
-          <a 
-            href="https://admin.shopify.com" 
-            target="_blank"
-            className="inline-block bg-blue-900 text-white font-black px-10 py-4 rounded-full hover:scale-105 transition-transform shadow-lg"
-          >
-            CLAIM MY FREE GIFT
-          </a>
-      </div>
+      <main className="max-w-4xl mx-auto p-8">
+        <header className="text-center mb-12">
+          <h1 className="text-4xl font-black text-slate-900 mb-2">مرحباً بكِ في ديوانكِ الملكي 🏺</h1>
+          <p className="text-amber-700 font-bold italic">أنتِ الآن على طريق الملوك</p>
+        </header>
 
-      <div className="grid grid-cols-2 gap-4">
-        {stats.map((stat, index) => (
-          <div key={index} className="bg-white p-6 rounded-3xl shadow-lg border-b-4 border-yellow-500 text-center">
-            <div className="text-4xl mb-2">{stat.icon}</div>
-            <div className="text-gray-500 text-sm font-bold uppercase">{stat.label}</div>
-            <div className="text-2xl font-black text-blue-900">{stat.value}</div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {/* بطاقة النقاط */}
+          <div className="bg-blue-900 text-white p-8 rounded-3xl shadow-2xl relative overflow-hidden">
+            <div className="relative z-10">
+              <h3 className="text-xl font-bold mb-2">رصيد نقاط النيل 🌊</h3>
+              <p className="text-5xl font-black text-yellow-400">{studentData.nilePoints}</p>
+              <p className="mt-4 text-sm opacity-80">استبدليها بخصومات من المتجر الملكي</p>
+            </div>
+            <div className="absolute -right-10 -bottom-10 text-9xl opacity-10 italic">Nile</div>
           </div>
-        ))}
-      </div>
+
+          {/* حالة الخرطوش */}
+          <div className="bg-white p-8 rounded-3xl shadow-xl border-t-8 border-yellow-500 flex flex-col items-center justify-center text-center">
+            <h3 className="text-xl font-bold text-slate-800 mb-4">الخرطوش الملكي 📜</h3>
+            {studentData.cartoucheUnlocked ? (
+              <div className="animate-pulse">
+                <span className="text-6xl mb-4 block">✨</span>
+                <p className="text-green-600 font-black">تم فتح الخرطوش الخاص بكِ!</p>
+                <button className="mt-4 bg-yellow-500 text-slate-900 px-6 py-2 rounded-full font-bold">تحميل الخرطوش</button>
+              </div>
+            ) : (
+              <p className="text-slate-400">أكملي المستوى الأول لفتح خرطوشكِ</p>
+            )}
+          </div>
+        </div>
+
+        {/* سجل التحديات */}
+        <section className="mt-12 bg-white rounded-3xl p-8 shadow-lg">
+          <h3 className="text-2xl font-black text-slate-800 mb-6 border-b pb-4">سجل إنجازاتكِ</h3>
+          <div className="space-y-4">
+            {studentData.completedChallenges.map((challenge, index) => (
+              <div key={index} className="flex justify-between items-center bg-stone-50 p-4 rounded-2xl border-r-4 border-blue-900">
+                <span className="font-bold text-slate-700">{challenge}</span>
+                <span className="text-green-600 font-bold">✅ مكتمل</span>
+              </div>
+            ))}
+          </div>
+        </section>
+      </main>
     </div>
   );
 }
