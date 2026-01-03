@@ -1,3 +1,4 @@
+'use client'; 
 export default function PharaohAvatar({ src }: { src: string }) {
   return (
     <div className="pharaoh-avatar">
