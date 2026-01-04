@@ -1,93 +1,108 @@
 'use client';
 import React, { useState } from 'react';
 
-export default function NefertitiAcademyFull() {
-  const [page, setPage] = useState('home'); // home, challenges, lessons
-  const [points, setPoints] = useState(0);
-  const [feedback, setFeedback] = useState('');
-  const [aiSpeech, setAiSpeech] = useState('أهلاً بكِ في أكاديمية يالا مصري. أنا معلمتكِ الآلية، جاهزة لرحلة اليوم.');
+export default function NefertitiAcademyEmpire() {
+  const [view, setView] = useState('dashboard'); // dashboard, lessons, teachers, goals
+  const [level, setLevel] = useState('مبتدئ ملكي');
+  const [points, setPoints] = useState(120);
+  const [goal, setGoal] = useState('إتقان المحادثة اليومية');
 
-  // 🔊 محرك النطق الملكي
+  // دالة النطق الصوتي
   const speak = (text: string) => {
     if (typeof window !== 'undefined' && window.speechSynthesis) {
       window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'ar-EG'; 
-      utterance.rate = 0.8;
-      window.speechSynthesis.speak(utterance);
-    }
-  };
-
-  const handleChallenge = (isCorrect: boolean) => {
-    if (isCorrect) {
-      setPoints(prev => prev + 20);
-      setFeedback('🏰 مذهل! إجابة ملكية صحيحة تليق بفخامتكِ.');
-      setAiSpeech("لقد أتقنتِ نغمة الأدب المصري الرفيع في هذا الموقف!");
-    } else {
-      setFeedback('⚠️ المحاولة فخر للملكات، جربي مرة أخرى.');
+      const msg = new SpeechSynthesisUtterance(text);
+      msg.lang = 'ar-EG';
+      window.speechSynthesis.speak(msg);
     }
   };
 
   return (
     <div style={{ backgroundColor: '#050a15', color: 'white', minHeight: '100vh', direction: 'rtl', fontFamily: 'serif' }}>
       
-      {/* 1. الشريط العلوي الملكي (التنقل بين الصفحات الثلاث) */}
-      <header style={{ padding: '20px', textAlign: 'center', borderBottom: '2px solid #f59e0b', background: '#0a0f1a' }}>
-        <h1 style={{ color: '#f59e0b', margin: '0 0 10px 0' }}>أكاديمية يالا مصري 🏺</h1>
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '15px', marginBottom: '15px' }}>
-          <button onClick={() => setPage('home')} style={navBtnStyle(page === 'home')}>🏠 الرئيسية</button>
-          <button onClick={() => setPage('challenges')} style={navBtnStyle(page === 'challenges')}>⚔️ التحديات</button>
-          <button onClick={() => setPage('lessons')} style={navBtnStyle(page === 'lessons')}>📖 الدروس</button>
-        </div>
-        <div style={{ color: '#f59e0b', fontWeight: 'bold' }}>رصيد الفخامة: {points} XP 🪙</div>
-      </header>
+      {/* 🏰 شريط التنقل الإمبراطوري */}
+      <nav style={{ display: 'flex', justifyContent: 'around', background: '#0a0f1a', padding: '20px', borderBottom: '2px solid #f59e0b', position: 'sticky', top: 0, zIndex: 100 }}>
+        <button onClick={() => setView('dashboard')} style={navLink(view === 'dashboard')}>🏠 لوحة التحكم</button>
+        <button onClick={() => setView('lessons')} style={navLink(view === 'lessons')}>📖 قاعة الدروس</button>
+        <button onClick={() => setView('teachers')} style={navLink(view === 'teachers')}>🤖 المعلمات</button>
+        <button onClick={() => setView('goals')} style={navLink(view === 'goals')}>🎯 الأهداف</button>
+      </nav>
 
-      <main style={{ maxWidth: '800px', margin: '30px auto', padding: '0 20px' }}>
+      <main style={{ maxWidth: '1100px', margin: '40px auto', padding: '0 20px' }}>
 
-        {/* --- الصفحة الأولى: الرئيسية ومعلمة جميناي --- */}
-        {page === 'home' && (
-          <section style={{ textAlign: 'center', animation: 'fadeIn 0.5s' }}>
-            <div style={{ background: '#0f172a', padding: '30px', borderRadius: '30px', border: '1px solid #f59e0b' }}>
-              <div style={{ fontSize: '50px', marginBottom: '10px' }}>🤖</div>
-              <h2 style={{ color: '#f59e0b' }}>المعلمة الملكية (جميناي)</h2>
-              <div style={{ background: '#1e293b', padding: '20px', borderRadius: '20px', position: 'relative', marginTop: '15px' }}>
-                <p style={{ fontSize: '1.2rem', fontStyle: 'italic' }}>"{aiSpeech}"</p>
-                <button onClick={() => speak(aiSpeech)} style={{ border: 'none', background: 'none', cursor: 'pointer', fontSize: '24px' }}>🔊</button>
+        {/* 1. لوحة تحكم الطالب (Dashboard) */}
+        {view === 'dashboard' && (
+          <div style={{ animation: 'fadeIn 0.5s' }}>
+            <h2 style={{ color: '#f59e0b' }}>مرحباً بكِ في عرشكِ التعليمي، الملكة نفرتيتي 👑</h2>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px', marginTop: '30px' }}>
+              <div style={statCard}>
+                <h3>المستوى الحالي</h3>
+                <p style={{ fontSize: '1.5rem', color: '#f59e0b' }}>{level}</p>
               </div>
-              <button onClick={() => setPage('challenges')} style={{ marginTop: '30px', padding: '15px 40px', background: '#f59e0b', border: 'none', borderRadius: '50px', fontWeight: 'bold', cursor: 'pointer' }}>بداية التعلم 🚀</button>
+              <div style={statCard}>
+                <h3>إجمالي النقاط</h3>
+                <p style={{ fontSize: '1.5rem', color: '#f59e0b' }}>{points} XP 🪙</p>
+              </div>
+              <div style={statCard}>
+                <h3>الهدف المخطط</h3>
+                <p style={{ opacity: 0.8 }}>{goal}</p>
+              </div>
             </div>
-          </section>
+          </div>
         )}
 
-        {/* --- الصفحة الثانية: التحديات التفاعلية --- */}
-        {page === 'challenges' && (
-          <section style={{ animation: 'fadeIn 0.5s' }}>
-            <div style={{ background: 'linear-gradient(180deg, #0f172a, #050a15)', padding: '40px', borderRadius: '40px', border: '2px solid #f59e0b', textAlign: 'center' }}>
-              <h2 style={{ color: '#f59e0b' }}>تحدي الموقف: "في التاكسي" 🚕</h2>
-              <p style={{ fontSize: '1.5rem', margin: '20px 0' }}>"أنا عايز اروح الفندق لو سمحت"</p>
-              <button onClick={() => speak("أنا عايز اروح الفندق لو سمحت")} style={{ background: '#1e293b', border: 'none', color: 'white', padding: '10px 20px', borderRadius: '50px', cursor: 'pointer', marginBottom: '30px' }}>🔊 اسمعي النطق</button>
+        {/* 2. قاعة الدروس (Lesson Hall) */}
+        {view === 'lessons' && (
+          <div style={sectionContainer}>
+            <h2 style={{ color: '#f59e0b' }}>📖 قاعة الدروس الملكية</h2>
+            <div style={{ display: 'grid', gap: '15px', marginTop: '20px' }}>
+              {['التعارف المصري', 'التسوق في البازار', 'الطلب في المطعم'].map((lesson, i) => (
+                <div key={i} style={lessonRow}>
+                  <span>الدرس {i+1}: {lesson}</span>
+                  <button onClick={() => speak(`بدء درس ${lesson}`)} style={actionBtnSmall}>بدء الدرس ⚔️</button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* 3. صفحة المعلمات (Teachers System) */}
+        {view === 'teachers' && (
+          <div style={sectionContainer}>
+            <h2 style={{ color: '#f59e0b' }}>🤖 نظام المعلمات الآلي</h2>
+            <div style={{ display: 'flex', gap: '20px', alignItems: 'center', background: '#1e293b', padding: '30px', borderRadius: '30px' }}>
+              <div style={{ fontSize: '50px' }}>🤖</div>
+              <div>
+                <h3>المعلمة "جميناي"</h3>
+                <p>"أنا هنا لمرافقتكِ في كل خطوة. ذكائي الاصطناعي مكرس لخدمة رحلتكِ التعليمية."</p>
+                <button onClick={() => speak("أنا هنا لمرافقتكِ في كل خطوة")} style={actionBtnSmall}>استماع للصوت 🔊</button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* 4. تحديد الهدف والمستوى (Goals & Level) */}
+        {view === 'goals' && (
+          <div style={sectionContainer}>
+            <h2 style={{ color: '#f59e0b' }}>🎯 تحديد المسار الملكي</h2>
+            <div style={{ marginTop: '30px' }}>
+              <label>اختاري هدفكِ الأسبوعي:</label>
+              <select onChange={(e) => setGoal(e.target.value)} style={selectStyle}>
+                <option>إتقان 50 جملة محادثة</option>
+                <option>اجتياز اختبار المستوى الأول</option>
+                <option>التحدث بطلاقة مع السائقين</option>
+              </select>
               
-              <div style={{ display: 'grid', gap: '15px' }}>
-                <button onClick={() => handleChallenge(false)} style={choiceStyle}>1. وديني الفندق بسرعة</button>
-                <button onClick={() => handleChallenge(true)} style={{...choiceStyle, backgroundColor: '#f59e0b', color: 'black'}}>2. انا عايز اروح الفندق لو سمحت ✅</button>
+              <div style={{ marginTop: '40px' }}>
+                <label>تغيير المستوى الدراسي:</label>
+                <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
+                  {['مبتدئ', 'متوسط', 'خبير'].map(l => (
+                    <button key={l} onClick={() => setLevel(`${l} ملكي`)} style={levelBtn(level.includes(l))}>{l}</button>
+                  ))}
+                </div>
               </div>
-              {feedback && <p style={{ marginTop: '20px', fontWeight: 'bold', color: feedback.includes('أحسنت') ? '#4ade80' : '#f87171' }}>{feedback}</p>}
             </div>
-          </section>
-        )}
-
-        {/* --- الصفحة الثالثة: قاعة الدروس --- */}
-        {page === 'lessons' && (
-          <section style={{ textAlign: 'center', animation: 'fadeIn 0.5s' }}>
-            <div style={{ background: '#0a0f1a', padding: '50px', borderRadius: '30px', border: '1px solid rgba(255,255,255,0.1)' }}>
-              <h2 style={{ color: '#f59e0b' }}>خريطة رحلة نفرتيتي 🏺</h2>
-              <p>المستوى الأول: أساسيات التعامل الراقي</p>
-              <div style={{ width: '100%', height: '10px', background: '#1e293b', borderRadius: '5px', marginTop: '20px', overflow: 'hidden' }}>
-                <div style={{ width: '35%', height: '100%', background: '#f59e0b' }}></div>
-              </div>
-              <p style={{ opacity: 0.5, marginTop: '10px' }}>تم إنجاز 35% من الرحلة الملكية</p>
-            </div>
-          </section>
+          </div>
         )}
 
       </main>
@@ -95,24 +110,71 @@ export default function NefertitiAcademyFull() {
   );
 }
 
-// تنسيقات مساعدة
-const navBtnStyle = (active: boolean) => ({
-  padding: '10px 20px',
+// --- التنسيقات الفخمة ---
+const navLink = (active: boolean) => ({
+  padding: '12px 25px',
   borderRadius: '12px',
   border: 'none',
-  cursor: 'pointer',
-  backgroundColor: active ? '#f59e0b' : '#1e293b',
+  background: active ? '#f59e0b' : 'transparent',
   color: active ? 'black' : 'white',
   fontWeight: 'bold' as const,
+  cursor: 'pointer',
   transition: '0.3s'
 });
 
-const choiceStyle = {
-  padding: '20px',
-  borderRadius: '20px',
-  border: '1px solid #334155',
-  background: 'rgba(30, 41, 59, 0.5)',
-  color: 'white',
-  cursor: 'pointer',
-  fontWeight: 'bold' as const
+const statCard = {
+  background: '#0a0f1a',
+  padding: '30px',
+  borderRadius: '25px',
+  border: '1px solid rgba(245,158,11,0.3)',
+  textAlign: 'center' as const
 };
+
+const sectionContainer = {
+  background: '#0a0f1a',
+  padding: '40px',
+  borderRadius: '40px',
+  border: '2px solid #f59e0b',
+  animation: 'fadeIn 0.5s'
+};
+
+const lessonRow = {
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  padding: '20px',
+  background: 'rgba(255,255,255,0.05)',
+  borderRadius: '15px',
+  border: '1px solid rgba(245,158,11,0.1)'
+};
+
+const actionBtnSmall = {
+  background: '#f59e0b',
+  color: 'black',
+  border: 'none',
+  padding: '10px 20px',
+  borderRadius: '50px',
+  fontWeight: 'bold' as const,
+  cursor: 'pointer'
+};
+
+const selectStyle = {
+  width: '100%',
+  padding: '15px',
+  marginTop: '10px',
+  borderRadius: '15px',
+  background: '#1e293b',
+  color: 'white',
+  border: '1px solid #f59e0b'
+};
+
+const levelBtn = (active: boolean) => ({
+  flex: 1,
+  padding: '15px',
+  borderRadius: '15px',
+  border: '1px solid #f59e0b',
+  background: active ? '#f59e0b' : 'transparent',
+  color: active ? 'black' : 'white',
+  fontWeight: 'bold' as const,
+  cursor: 'pointer'
+});
