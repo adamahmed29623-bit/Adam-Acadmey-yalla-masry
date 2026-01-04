@@ -63,18 +63,54 @@ export default function YallaMasryApp() {
             </div>
           </div>
         )}
+    
+        {/* صفحة المعلمة جميناي مع محرك صوتي قوي */}
+{view === 'teacher' && (
+  <div style={{ background: '#0a0f1a', padding: '40px', borderRadius: '30px', border: '2px solid #f59e0b', textAlign: 'center', animation: 'fadeIn 0.8s' }}>
+    <div style={{ fontSize: '70px', marginBottom: '20px' }}>🤖</div>
+    <h2 style={{ color: '#f59e0b', fontSize: '2rem' }}>المعلمة الملكية "جميناي"</h2>
+    
+    <div style={{ background: 'linear-gradient(145deg, #1e293b, #0f172a)', padding: '30px', borderRadius: '25px', marginBottom: '25px', border: '1px border rgba(245,158,11,0.2)' }}>
+      <p style={{ fontSize: '1.4rem', lineHeight: '1.6', color: '#e2e8f0' }}>
+        "أهلاً بكِ يا جلالة الملكة نفرتيتي. أنا هنا مكرسة لخدمتكِ، سأعلمكِ أصول اللهجة المصرية حتى تتقنيها كأهلها."
+      </p>
+    </div>
 
-        {/* صفحة المعلمة (صورة 15) */}
-        {view === 'teacher' && (
-          <div style={{ background: '#0a0f1a', padding: '40px', borderRadius: '30px', border: '1px solid #f59e0b', textAlign: 'center' }}>
-            <div style={{ fontSize: '50px', marginBottom: '20px' }}>🤖</div>
-            <h2 style={{ color: '#f59e0b' }}>المعلمة "جميناي"</h2>
-            <p style={{ fontSize: '1.2rem', background: '#1e293b', padding: '20px', borderRadius: '15px' }}>
-              "أنا هنا لمرافقتكِ في كل خطوة. ذكائي الاصطناعي مكرس لخدمة رحلتكِ التعليمية."
-            </p>
-            <button onClick={() => speak("أنا هنا لمرافقتك في كل خطوة")} style={goldBtn}>🔊 استماع للصوت</button>
-          </div>
-        )}
+    {/* زر الصوت السحري */}
+    <button 
+      onClick={() => {
+        if ('speechSynthesis' in window) {
+          window.speechSynthesis.cancel(); // مسح أي صوت قديم معلق
+          const speech = new SpeechSynthesisUtterance("أهلاً بكِ يا جلالة الملكة نفرتيتي. أنا هنا مكرسة لخدمتكِ، سأعلمكِ أصول اللهجة المصرية حتى تتقنيها كأهلها.");
+          speech.lang = 'ar-EG'; // اللهجة المصرية
+          speech.rate = 0.8;    // سرعة هادئة تليق بالملوك
+          speech.pitch = 1.1;   // نبرة رقيقة واضحة
+          window.speechSynthesis.speak(speech);
+        } else {
+          alert("عذراً يا ملكة، متصفحك يحتاج لتحديث لدعم الصوت الملكي.");
+        }
+      }} 
+      style={{
+        background: 'linear-gradient(90deg, #f59e0b, #fbbf24)',
+        color: 'black',
+        padding: '15px 40px',
+        borderRadius: '50px',
+        border: 'none',
+        fontSize: '1.2rem',
+        fontWeight: 'bold',
+        cursor: 'pointer',
+        boxShadow: '0 10px 20px rgba(245,158,11,0.3)',
+        transition: 'transform 0.2s'
+      }}
+      onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
+      onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
+    >
+      🔊 اضغطي هنا لتنطق جميناي
+    </button>
+  </div>
+)}  
+          
+        
 
         {/* صفحة الدروس (صورة 14) */}
         {view === 'lessons' && (
