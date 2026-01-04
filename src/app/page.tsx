@@ -64,17 +64,69 @@ export default function YallaMasryApp() {
           </div>
         )}
     
-        {/* صفحة المعلمة جميناي مع محرك صوتي قوي */}
-{view === 'teacher' && (
-  <div style={{ background: '#0a0f1a', padding: '40px', borderRadius: '30px', border: '2px solid #f59e0b', textAlign: 'center', animation: 'fadeIn 0.8s' }}>
-    <div style={{ fontSize: '70px', marginBottom: '20px' }}>🤖</div>
-    <h2 style={{ color: '#f59e0b', fontSize: '2rem' }}>المعلمة الملكية "جميناي"</h2>
-    
-    <div style={{ background: 'linear-gradient(145deg, #1e293b, #0f172a)', padding: '30px', borderRadius: '25px', marginBottom: '25px', border: '1px border rgba(245,158,11,0.2)' }}>
-      <p style={{ fontSize: '1.4rem', lineHeight: '1.6', color: '#e2e8f0' }}>
-        "أهلاً بكِ يا جلالة الملكة نفرتيتي. أنا هنا مكرسة لخدمتكِ، سأعلمكِ أصول اللهجة المصرية حتى تتقنيها كأهلها."
-      </p>
+        'use client';
+import React, { useState, useEffect } from 'react';
+
+export default function GeminiTeacher() {
+  const [isAwake, setIsAwake] = useState(false);
+
+  // دالة الإنعاش الصوتي
+  const reviveGemini = () => {
+    if (typeof window !== 'undefined' && window.speechSynthesis) {
+      window.speechSynthesis.cancel(); // تنظيف أي صوت عالق
+      
+      const welcomeMsg = new SpeechSynthesisUtterance("تم تفعيل حواسي الملكية. أنا جاهزة للنطق يا جلالة الملكة نفرتيتي.");
+      welcomeMsg.lang = 'ar-EG'; // اللهجة المصرية
+      welcomeMsg.rate = 0.9;
+      
+      window.speechSynthesis.speak(welcomeMsg);
+      setIsAwake(true);
+    }
+  };
+
+  const speakSentence = (text: string) => {
+    if (typeof window !== 'undefined' && window.speechSynthesis) {
+      window.speechSynthesis.cancel();
+      const msg = new SpeechSynthesisUtterance(text);
+      msg.lang = 'ar-EG';
+      msg.rate = 0.85;
+      window.speechSynthesis.speak(msg);
+    }
+  };
+
+  return (
+    <div style={{ textAlign: 'center', padding: '40px', background: '#0a0f1a', borderRadius: '30px', border: '2px solid #f59e0b' }}>
+      <div style={{ fontSize: '80px', marginBottom: '20px', filter: isAwake ? 'drop-shadow(0 0 10px #f59e0b)' : 'grayscale(1)' }}>
+        🤖
+      </div>
+
+      {!isAwake ? (
+        <div>
+          <h3 style={{ color: '#f87171' }}>جميناي في حالة سبات...</h3>
+          <button 
+            onClick={reviveGemini} 
+            style={{ padding: '15px 30px', background: '#f59e0b', color: 'black', border: 'none', borderRadius: '50px', fontWeight: 'bold', cursor: 'pointer', fontSize: '1.2rem' }}
+          >
+            ⚡ اضغطي لعمل تنفس صناعي لجميناي
+          </button>
+        </div>
+      ) : (
+        <div style={{ animation: 'fadeIn 1s' }}>
+          <h3 style={{ color: '#4ade80' }}>جميناي استفاقت وهي الآن تسمعكِ! ✅</h3>
+          <p style={{ fontStyle: 'italic', fontSize: '1.3rem', margin: '20px 0' }}>
+            "أهلاً بكِ يا ملكة نفرتيتي، كيف يمكنني مساعدتكِ في تعلم المصرية اليوم؟"
+          </p>
+          <button 
+            onClick={() => speakSentence("أهلاً بكِ يا ملكة نفرتيتي، كيف يمكنني مساعدتكِ في تعلم المصرية اليوم؟")} 
+            style={{ background: '#1e293b', color: 'white', padding: '10px 20px', borderRadius: '10px', border: '1px solid #f59e0b', cursor: 'pointer' }}
+          >
+            🔊 اسمعي صوتها الآن
+          </button>
+        </div>
+      )}
     </div>
+  );
+}
 
     {/* زر الصوت السحري */}
     <button 
