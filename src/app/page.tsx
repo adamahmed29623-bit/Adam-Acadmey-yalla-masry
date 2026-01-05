@@ -1,241 +1,276 @@
 'use client';
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yalla Masry Academy - Unified Royal System</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Cairo', sans-serif; background-color: #050505; color: #fff; scroll-behavior: smooth; }
-        .gold-text { color: #f59e0b; }
-        .gold-bg { background-color: #f59e0b; }
-        .royal-border { border: 2px solid #f59e0b; }
-        .glass-panel { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(245, 158, 11, 0.2); }
-        .nav-item { cursor: pointer; transition: 0.3s; }
-        .nav-item:hover { color: #f59e0b; transform: scale(1.05); }
-        .hidden-section { display: none; }
-        input { background: rgba(255,255,255,0.05) !important; border: 1px solid rgba(245, 158, 11, 0.3) !important; color: white !important; }
-    </style>
-</head>
-<body>
+import React, { useState, useEffect, useRef } from 'react';
+import { 
+  User, BookOpen, Trophy, ShoppingBag, Settings, 
+  MapPin, Plane, Car, Hotel, ShoppingCart, 
+  ChevronRight, Layout, Star, LogIn
+} from 'lucide-react';
 
-    <!-- 1. صفحة تسجيل الدخول (Login Page) -->
-    <div id="auth-section" class="min-h-screen flex items-center justify-center p-4">
-        <div class="glass-panel p-10 rounded-3xl w-full max-w-md text-center shadow-2xl royal-border">
-            <h1 class="text-4xl font-black gold-text mb-2">YALLA MASRY</h1>
-            <p class="text-amber-100/50 mb-8 italic">نظام الهوية الملكي المتكامل</p>
-            <div class="space-y-4">
-                <input type="email" placeholder="البريد الإلكتروني الملكي" class="w-full p-4 rounded-xl outline-none focus:border-amber-500 transition">
-                <input type="password" placeholder="كلمة السر" class="w-full p-4 rounded-xl outline-none focus:border-amber-500 transition">
-                <button onclick="navigate('goal-section')" class="w-full gold-bg text-black font-black py-4 rounded-xl shadow-lg hover:brightness-110 transition">دخول الأكاديمية</button>
-            </div>
-            <p class="mt-6 text-sm text-amber-200/40">بانتظار إشارتكِ يا جلالة الملكة نفرتيتي</p>
+// --- المكونات الفرعية الملكية ---
+
+const SidebarItem = ({ icon: Icon, label, active, onClick, color = "text-amber-500" }) => (
+  <div 
+    onClick={onClick}
+    className={`flex items-center gap-4 p-4 cursor-pointer transition-all duration-300 rounded-xl ${
+      active ? 'bg-amber-500/10 border-r-4 border-amber-500 text-amber-500' : 'text-gray-400 hover:text-amber-200 hover:bg-white/5'
+    }`}
+  >
+    <Icon size={24} />
+    <span className="font-bold">{label}</span>
+  </div>
+);
+
+const Card = ({ children, title, icon: Icon }) => (
+  <div className="bg-slate-900/50 backdrop-blur-md border border-amber-500/20 p-6 rounded-3xl shadow-xl">
+    <div className="flex items-center gap-3 mb-6">
+      {Icon && <Icon className="text-amber-500" size={24} />}
+      <h3 className="text-xl font-black text-white">{title}</h3>
+    </div>
+    {children}
+  </div>
+);
+
+export default function App() {
+  const [view, setView] = useState('auth'); // auth, goal, dashboard
+  const [tab, setTab] = useState('main'); // main, journey, lessons, shop, admin
+  const [journeyStep, setJourneyStep] = useState(0);
+  const [userPoints, setUserPoints] = useState(1250);
+
+  // سيناريو الرحلة الواقعية
+  const journeyStages = [
+    { id: 'airport', name: 'مطار القاهرة', char: 'ضابط الجوازات', msg: 'أهلاً بكِ يا جلالة الملكة نفرتيتي في أرض الوطن. جواز سفركِ مختوم بختم العزة.', icon: Plane },
+    { id: 'taxi', name: 'التاكسي المصري', char: 'عم عبده السائق', msg: 'نورتي المحروسة يا ست الهوانم. يلا بينا على الفندق الملكي.', icon: Car },
+    { id: 'hotel', name: 'استقبال الفندق', char: 'مدير الاستقبال', msg: 'جلالة الملكة، جناحكِ الملكي جاهز كما خططنا تماماً.', icon: Hotel },
+    { id: 'khan', name: 'خان الخليلي', char: 'تاجر التحف', msg: 'دي روح مصر اللي بنحافظ عليها في قطعنا النادرة يا فندم.', icon: ShoppingBag },
+    { id: 'grocery', name: 'البقالة', char: 'عم محمد البقال', msg: 'مصر دايماً عامرة بيكم وبأصلكم الطيب يا ملكة.', icon: ShoppingCart }
+  ];
+
+  // --- شاشات العرض ---
+
+  if (view === 'auth') {
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center p-6 font-['Cairo']" dir="rtl">
+        <div className="w-full max-w-md bg-slate-900 border-2 border-amber-500/30 p-10 rounded-[40px] text-center shadow-[0_0_50px_rgba(245,158,11,0.1)]">
+          <h1 className="text-5xl font-black text-amber-500 mb-2 tracking-tighter">YALLA MASRY</h1>
+          <p className="text-amber-100/40 mb-10 text-sm uppercase tracking-widest">The Royal Identity Academy</p>
+          <div className="space-y-4">
+            <input type="email" placeholder="البريد الإلكتروني الملكي" className="w-full bg-black/50 border border-amber-500/20 p-4 rounded-2xl text-white outline-none focus:border-amber-500 transition" />
+            <input type="password" placeholder="كلمة السر" className="w-full bg-black/50 border border-amber-500/20 p-4 rounded-2xl text-white outline-none focus:border-amber-500 transition" />
+            <button 
+              onClick={() => setView('goal')}
+              className="w-full bg-amber-500 hover:bg-amber-600 text-black font-black py-4 rounded-2xl shadow-lg transition-all transform hover:scale-[1.02]"
+            >
+              دخول الأكاديمية
+            </button>
+          </div>
         </div>
-    </div>
+      </div>
+    );
+  }
 
-    <!-- 2. صفحة تحديد الهدف والمستوى (Goals & Level) -->
-    <div id="goal-section" class="hidden-section min-h-screen p-8">
-        <div class="max-w-4xl mx-auto text-center mt-20">
-            <h2 class="text-5xl font-black gold-text mb-6">حددي هدفكِ يا ملكة</h2>
-            <p class="text-xl text-amber-100 mb-12">كل رحلة تبدأ بخطوة نحو الهوية</p>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div onclick="selectGoal('فصاحة')" class="glass-panel p-8 rounded-2xl cursor-pointer hover:border-amber-500 transition">
-                    <div class="text-4xl mb-4">📜</div>
-                    <h3 class="text-2xl font-bold">الفصاحة</h3>
-                    <p class="text-sm text-gray-400 mt-2">إتقان اللغة بأسلوب راقٍ</p>
-                </div>
-                <div onclick="selectGoal('إتيكيت')" class="glass-panel p-8 rounded-2xl cursor-pointer hover:border-amber-500 transition">
-                    <div class="text-4xl mb-4">👑</div>
-                    <h3 class="text-2xl font-bold">الإتيكيت</h3>
-                    <p class="text-sm text-gray-400 mt-2">سلوكيات الملوك والملكات</p>
-                </div>
-                <div onclick="selectGoal('تاريخ')" class="glass-panel p-8 rounded-2xl cursor-pointer hover:border-amber-500 transition">
-                    <div class="text-4xl mb-4">🏺</div>
-                    <h3 class="text-2xl font-bold">التاريخ</h3>
-                    <p class="text-sm text-gray-400 mt-2">جذور الهوية المصرية</p>
-                </div>
+  if (view === 'goal') {
+    return (
+      <div className="min-h-screen bg-[#050505] text-white p-10 font-['Cairo'] flex flex-col items-center justify-center" dir="rtl">
+        <h2 className="text-5xl font-black text-amber-500 mb-4">حددي هدفكِ يا ملكة</h2>
+        <p className="text-amber-100/60 mb-12 text-xl">كل تفصيل خططنا له يبدأ من هنا</p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-5xl">
+          {[
+            { t: 'إتقان الفصاحة', d: 'اللغة هي وعاء الهوية', i: '📜' },
+            { t: 'الإتيكيت الملكي', d: 'سلوكيات تعكس الرقي المصري', i: '👑' },
+            { t: 'الجذور التاريخية', d: 'فهم الماضي لصناعة المستقبل', i: '🏺' }
+          ].map((g, i) => (
+            <div key={i} onClick={() => setView('dashboard')} className="group bg-slate-900 border border-amber-500/20 p-10 rounded-[35px] cursor-pointer hover:border-amber-500 transition-all hover:-translate-y-2">
+              <div className="text-6xl mb-6">{g.i}</div>
+              <h3 className="text-2xl font-bold mb-2 group-hover:text-amber-500 transition">{g.t}</h3>
+              <p className="text-gray-500 text-sm">{g.d}</p>
             </div>
-            <button onclick="navigate('dashboard-student')" class="mt-12 text-amber-500 font-bold underline">الانتقال للوحة التحكم</button>
+          ))}
         </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-[#020202] text-white font-['Cairo'] flex" dir="rtl">
+      {/* Sidebar */}
+      <aside className="w-72 bg-slate-950 border-l border-amber-500/10 p-6 flex flex-col gap-4">
+        <div className="mb-10 px-4">
+          <h1 className="text-3xl font-black text-amber-500">YALLA MASRY</h1>
+          <p className="text-[10px] text-amber-100/30 uppercase tracking-[0.3em]">Official System</p>
+        </div>
+        
+        <nav className="flex flex-col gap-2">
+          <SidebarItem icon={Layout} label="الرئيسية" active={tab === 'main'} onClick={() => setTab('main')} />
+          <SidebarItem icon={MapPin} label="رحلة الواقع" active={tab === 'journey'} onClick={() => setTab('journey')} />
+          <SidebarItem icon={BookOpen} label="الدروس الملكية" active={tab === 'lessons'} onClick={() => setTab('lessons')} />
+          <SidebarItem icon={ShoppingBag} label="المتجر" active={tab === 'shop'} onClick={() => setTab('shop')} />
+          <div className="my-4 border-t border-amber-500/10"></div>
+          <SidebarItem icon={Settings} label="لوحة التحكم" active={tab === 'admin'} onClick={() => setTab('admin')} color="text-red-500" />
+        </nav>
+
+        <div className="mt-auto p-4 bg-amber-500/5 rounded-2xl border border-amber-500/10">
+          <p className="text-xs text-amber-500 mb-1 font-bold">الملكة: نفرتيتي</p>
+          <p className="text-[10px] text-gray-500">المستوى: محترف</p>
+        </div>
+      </aside>
+
+      {/* Main Content */}
+      <main className="flex-1 p-10 overflow-y-auto">
+        
+        {tab === 'main' && (
+          <div className="space-y-10 animate-in fade-in duration-700">
+            <header className="flex justify-between items-end">
+              <div>
+                <h2 className="text-4xl font-black mb-2 text-white">أهلاً بكِ في عَرشكِ، <span className="text-amber-500">نفرتيتي</span></h2>
+                <p className="text-gray-500 italic">"نحن لا نبني مشروعاً، نحن نعيد صياغة الهوية"</p>
+              </div>
+              <div className="flex gap-4">
+                <div className="bg-slate-900 px-6 py-3 rounded-2xl border border-amber-500/20 text-center">
+                  <p className="text-[10px] text-gray-500 uppercase">النقاط الملكية</p>
+                  <p className="text-xl font-black text-amber-500">{userPoints}</p>
+                </div>
+              </div>
+            </header>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <Card title="تقدم الهوية" icon={Star}>
+                <div className="flex items-center gap-4">
+                  <div className="flex-1 h-3 bg-black rounded-full overflow-hidden">
+                    <div className="h-full bg-amber-500 w-[75%] shadow-[0_0_15px_#f59e0b]"></div>
+                  </div>
+                  <span className="font-bold">75%</span>
+                </div>
+              </Card>
+              <Card title="المعلمات النشطات" icon={User}>
+                <div className="flex -space-x-3 space-x-reverse">
+                  {[1,2,3,4].map(i => <div key={i} className="w-10 h-10 rounded-full bg-amber-500 border-2 border-black" />)}
+                  <div className="w-10 h-10 rounded-full bg-slate-800 border-2 border-black flex items-center justify-center text-[10px]">+5</div>
+                </div>
+              </Card>
+              <Card title="تحدي اليوم" icon={Trophy}>
+                <p className="text-sm text-gray-400">تحدثي بالفصحى لمدة دقيقتين عن "الأمانة".</p>
+              </Card>
+            </div>
+
+            <div className="bg-slate-900/40 rounded-[40px] p-8 border border-amber-500/10">
+              <h3 className="text-2xl font-black mb-6">متابعة الدروس</h3>
+              <div className="space-y-4">
+                {[
+                  { t: 'فن الإتيكيت في المآدب', m: 'أ. سارة', p: '90%' },
+                  { t: 'تاريخ الأسرة الثامنة عشر', m: 'د. ليلى', p: '20%' }
+                ].map((d, i) => (
+                  <div key={i} className="bg-black/40 p-5 rounded-2xl flex items-center justify-between group hover:bg-amber-500/5 transition">
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 bg-amber-500/20 rounded-xl flex items-center justify-center text-amber-500 font-bold">{i+1}</div>
+                      <div>
+                        <p className="font-bold">{d.t}</p>
+                        <p className="text-xs text-gray-500">المعلمة: {d.m}</p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm font-bold text-amber-500">{d.p}</p>
+                      <button className="text-[10px] uppercase tracking-wider text-gray-400 group-hover:text-white transition">استمرار</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {tab === 'journey' && (
+          <div className="max-w-4xl mx-auto space-y-8 animate-in slide-in-from-bottom duration-500">
+            <h2 className="text-3xl font-black text-amber-500">محاكاة الواقع المصري</h2>
+            <div className="relative bg-slate-900 rounded-[50px] p-12 border-2 border-amber-500/20 overflow-hidden min-h-[400px] flex flex-col justify-center items-center text-center">
+              <div className="absolute top-0 left-0 w-full h-1 bg-amber-500/10">
+                <div 
+                  className="h-full bg-amber-500 transition-all duration-1000" 
+                  style={{ width: `${((journeyStep + 1) / journeyStages.length) * 100}%` }}
+                ></div>
+              </div>
+              
+              <div className="mb-8 p-6 bg-amber-500/10 rounded-full animate-bounce">
+                {React.createElement(journeyStages[journeyStep].icon, { size: 64, className: "text-amber-500" })}
+              </div>
+              
+              <h3 className="text-4xl font-black mb-2">{journeyStages[journeyStep].name}</h3>
+              <p className="text-amber-500 font-bold mb-6 italic">{journeyStages[journeyStep].char}</p>
+              
+              <div className="max-w-2xl bg-black/40 p-8 rounded-[30px] border border-white/5 mb-10">
+                <p className="text-2xl leading-relaxed text-amber-100">"{journeyStages[journeyStep].msg}"</p>
+              </div>
+
+              <div className="flex gap-4">
+                <button 
+                  disabled={journeyStep === 0}
+                  onClick={() => setJourneyStep(s => s - 1)}
+                  className="px-8 py-3 rounded-full border border-amber-500/30 text-amber-500 disabled:opacity-30"
+                >
+                  السابق
+                </button>
+                <button 
+                  onClick={() => journeyStep < journeyStages.length - 1 ? setJourneyStep(s => s + 1) : setJourneyStep(0)}
+                  className="px-12 py-3 rounded-full bg-amber-500 text-black font-black shadow-lg shadow-amber-500/20"
+                >
+                  {journeyStep === journeyStages.length - 1 ? 'إعادة الرحلة' : 'المحطة التالية'}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {tab === 'shop' && (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 animate-in zoom-in duration-500">
+            {[
+              { n: 'عقد نفرتيتي الذهبي', p: 5000, i: '📿' },
+              { n: 'كتاب الإتيكيت الحديث', p: 300, i: '📚' },
+              { n: 'بخور المعز الملكي', p: 150, i: '🕯️' },
+              { n: 'دورة الفصاحة المتقدمة', p: 1200, i: '📜' }
+            ].map((item, i) => (
+              <div key={i} className="bg-slate-900 p-8 rounded-[35px] border border-amber-500/10 hover:border-amber-500 transition group text-center">
+                <div className="text-5xl mb-6">{item.i}</div>
+                <h4 className="text-xl font-bold mb-2">{item.n}</h4>
+                <p className="text-amber-500 font-black mb-6">{item.p} نقطة</p>
+                <button className="w-full py-3 rounded-xl bg-white/5 group-hover:bg-amber-500 group-hover:text-black transition-all font-bold">شراء الآن</button>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {tab === 'admin' && (
+          <div className="space-y-8 animate-in fade-in duration-500">
+            <h2 className="text-3xl font-black text-red-500">مركز التحكم (الإدارة والمعلمات)</h2>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <Card title="إدارة الملكات (الطالبات)">
+                <div className="space-y-4">
+                  {['نفرتيتي', 'زليخة', 'ماعت'].map((name, i) => (
+                    <div key={i} className="flex items-center justify-between p-4 bg-black/30 rounded-2xl">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-full bg-red-500/20 border border-red-500" />
+                        <span className="font-bold text-sm">{name}</span>
+                      </div>
+                      <span className="text-[10px] text-green-500 font-bold">نشطة الآن</span>
+                      <button className="text-[10px] bg-white/5 px-3 py-1 rounded-md">سجل الدروس</button>
+                    </div>
+                  ))}
+                </div>
+              </Card>
+              <Card title="رفع محتوى جديد">
+                <div className="space-y-4">
+                  <input placeholder="عنوان الدرس" className="w-full bg-black/50 border border-white/10 p-4 rounded-xl outline-none focus:border-red-500 text-sm" />
+                  <select className="w-full bg-black/50 border border-white/10 p-4 rounded-xl outline-none focus:border-red-500 text-sm text-gray-400">
+                    <option>اختر القسم</option>
+                    <option>إتيكيت</option>
+                    <option>فصاحة</option>
+                  </select>
+                  <button className="w-full py-4 rounded-xl bg-red-600 font-black text-white hover:bg-red-700 transition shadow-lg shadow-red-600/20">نشر المحتوى للملكات</button>
+                </div>
+              </Card>
+            </div>
+          </div>
+        )}
+
+      </main>
     </div>
-
-    <!-- 3. لوحة التحكم الموحدة (Dashboard) -->
-    <div id="dashboard-student" class="hidden-section min-h-screen flex">
-        <!-- Sidebar -->
-        <aside class="w-64 glass-panel h-screen p-6 flex flex-col gap-8 fixed right-0 border-l-2 border-amber-900">
-            <div class="text-2xl font-black gold-text">YALLA MASRY</div>
-            <nav class="flex flex-col gap-6 text-lg">
-                <div onclick="showTab('main-dash')" class="nav-item gold-text">📊 الرئيسية</div>
-                <div onclick="showTab('lessons')" class="nav-item">📚 الدروس</div>
-                <div onclick="showTab('challenges')" class="nav-item">⚔️ التحديات</div>
-                <div onclick="showTab('teachers')" class="nav-item">👩‍🏫 المعلمات</div>
-                <div onclick="showTab('shop')" class="nav-item">🛍️ المتجر</div>
-                <div onclick="showTab('admin')" class="nav-item text-red-400">⚙️ الإدارة</div>
-            </nav>
-            <div class="mt-auto pt-6 border-t border-amber-900/50">
-                <p class="text-xs text-amber-500">الطالبة: نفرتيتي</p>
-                <button onclick="navigate('auth-section')" class="text-xs text-gray-500 underline">خروج</button>
-            </div>
-        </aside>
-
-        <!-- Main Content Area -->
-        <main class="flex-1 mr-64 p-10">
-            
-            <!-- Tab: Main Dashboard -->
-            <div id="main-dash" class="tab-content">
-                <header class="flex justify-between items-center mb-10">
-                    <h1 class="text-4xl font-black">أهلاً بكِ، <span class="gold-text">نفرتيتي</span></h1>
-                    <div class="flex gap-4">
-                        <div class="glass-panel px-6 py-2 rounded-full font-bold">المستوى: محترف</div>
-                        <div class="glass-panel px-6 py-2 rounded-full font-bold gold-text">💰 1,250 نقطة</div>
-                    </div>
-                </header>
-
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-                    <div class="glass-panel p-6 rounded-2xl">
-                        <h4 class="text-gray-400 mb-2">التقدم الحالي</h4>
-                        <div class="text-3xl font-black">75%</div>
-                        <div class="w-full bg-gray-800 h-2 mt-4 rounded-full">
-                            <div class="gold-bg h-full w-3/4 rounded-full"></div>
-                        </div>
-                    </div>
-                    <div class="glass-panel p-6 rounded-2xl">
-                        <h4 class="text-gray-400 mb-2">التحديات المكتملة</h4>
-                        <div class="text-3xl font-black">12/15</div>
-                    </div>
-                    <div class="glass-panel p-6 rounded-2xl">
-                        <h4 class="text-gray-400 mb-2">رتبة المملكة</h4>
-                        <div class="text-3xl font-black">ملكة فضية</div>
-                    </div>
-                </div>
-
-                <h3 class="text-2xl font-black mb-6">آخر الدروس</h3>
-                <div class="space-y-4">
-                    <div class="glass-panel p-4 rounded-xl flex justify-between items-center hover:bg-amber-900/10 transition">
-                        <div>
-                            <p class="font-bold">مقدمة في الإتيكيت الملكي</p>
-                            <p class="text-xs text-gray-500">المعلمة: أماني المصري</p>
-                        </div>
-                        <button class="gold-text font-bold">متابعة ⮕</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Tab: Lessons -->
-            <div id="lessons" class="tab-content hidden">
-                <h2 class="text-3xl font-black mb-8">مكتبة الدروس الملكية</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="glass-panel p-6 rounded-2xl">
-                        <div class="h-40 bg-gray-800 rounded-xl mb-4 overflow-hidden">
-                            <div class="w-full h-full flex items-center justify-center text-4xl">🎬</div>
-                        </div>
-                        <h3 class="text-xl font-bold">فن الحديث والخطابة</h3>
-                        <p class="text-sm text-gray-500 mt-2">كيف تتحدثين كملكة في المحافل الرسمية.</p>
-                        <button class="mt-4 gold-bg text-black px-6 py-2 rounded-lg font-bold">ابدئي الآن</button>
-                    </div>
-                    <!-- تكرار للدروس -->
-                </div>
-            </div>
-
-            <!-- Tab: Challenges -->
-            <div id="challenges" class="tab-content hidden">
-                <h2 class="text-3xl font-black mb-8">ساحة التحديات</h2>
-                <div class="glass-panel p-8 rounded-3xl border-dashed border-2 border-amber-500 text-center">
-                    <p class="text-2xl font-bold text-amber-500 mb-4">تحدي اليوم: المناظرة الملكية</p>
-                    <p class="text-gray-400 mb-6">سجلي فيديو لمدة دقيقة تتحدثين فيها عن الهوية المصرية.</p>
-                    <button class="gold-bg text-black px-10 py-3 rounded-full font-black">رفع التحدي</button>
-                </div>
-            </div>
-
-            <!-- Tab: Teachers -->
-            <div id="teachers" class="tab-content hidden">
-                <h2 class="text-3xl font-black mb-8">نخبة المعلمات</h2>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="glass-panel p-6 rounded-2xl text-center">
-                        <div class="w-20 h-20 bg-amber-500 mx-auto rounded-full mb-4"></div>
-                        <h3 class="text-xl font-bold">أ. سارة أحمد</h3>
-                        <p class="text-xs text-amber-500 mb-4">خيرة الإتيكيت</p>
-                        <button class="border border-amber-500 text-amber-500 px-4 py-1 rounded-full text-xs">حجز استشارة</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Tab: Shop -->
-            <div id="shop" class="tab-content hidden">
-                <h2 class="text-3xl font-black mb-8">المتجر الملكي</h2>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="glass-panel p-6 rounded-2xl">
-                        <div class="h-32 bg-amber-900/20 rounded-xl mb-4 flex items-center justify-center text-3xl">🏺</div>
-                        <h3 class="font-bold">كتاب الهوية المفقودة</h3>
-                        <div class="flex justify-between items-center mt-4">
-                            <span class="gold-text">500 نقطة</span>
-                            <button class="gold-bg text-black px-3 py-1 rounded-md text-sm font-bold">شراء</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Tab: Admin (لوحة تحكم المعلمة والإدارة) -->
-            <div id="admin" class="tab-content hidden">
-                <h2 class="text-3xl font-black text-red-500 mb-8">مركز الإدارة والتحكم</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div class="glass-panel p-6 rounded-2xl border-red-900/50">
-                        <h3 class="text-xl font-bold mb-4">إدارة الطالبات</h3>
-                        <table class="w-full text-sm">
-                            <thead><tr class="text-gray-500 border-b border-gray-800 text-right"><th class="pb-2">الاسم</th><th class="pb-2">الحالة</th><th class="pb-2">الإجراء</th></tr></thead>
-                            <tbody>
-                                <tr><td class="py-3">نفرتيتي</td><td class="text-green-500">نشط</td><td><button class="text-xs gold-text">تعديل</button></td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="glass-panel p-6 rounded-2xl">
-                        <h3 class="text-xl font-bold mb-4">إضافة درس جديد</h3>
-                        <input type="text" placeholder="عنوان الدرس" class="w-full p-3 rounded-lg mb-4">
-                        <textarea placeholder="وصف الدرس" class="w-full p-3 rounded-lg bg-transparent border border-amber-900 mb-4 h-24"></textarea>
-                        <button class="w-full bg-red-600 text-white py-3 rounded-lg font-bold">نشر الدرس للملكات</button>
-                    </div>
-                </div>
-            </div>
-
-        </main>
-    </div>
-
-    <script>
-        function navigate(sectionId) {
-            // إخفاء كل الأقسام الرئيسية
-            document.querySelectorAll('body > div').forEach(div => {
-                div.classList.add('hidden-section');
-            });
-            // إظهار القسم المطلوب
-            document.getElementById(sectionId).classList.remove('hidden-section');
-        }
-
-        function showTab(tabId) {
-            // إخفاء كل التبويبات في لوحة التحكم
-            document.querySelectorAll('.tab-content').forEach(tab => {
-                tab.classList.add('hidden');
-            });
-            // إظهار التبويب المطلوب
-            document.getElementById(tabId).classList.remove('hidden');
-
-            // تحديث حالة القائمة الجانبية (Sidebar)
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.classList.remove('gold-text');
-            });
-            // العثور على العنصر المقابل في القائمة الجانبية وتغيير لونه
-            event.currentTarget.classList.add('gold-text');
-        }
-
-        function selectGoal(goal) {
-            console.log("الهدف المختار: " + goal);
-            navigate('dashboard-student');
-        }
-
-        // بدء المحادثة الصوتية عند الدخول (اختياري)
-        function welcome() {
-            // منطق الصوت هنا
-        }
-    </script>
-</body>
-</html>
+  );
+}
