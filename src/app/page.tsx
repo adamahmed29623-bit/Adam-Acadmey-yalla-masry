@@ -1,131 +1,95 @@
 "use client";
-import React, { useState, useEffect, CSSProperties } from 'react';
+import React, { useState, useMemo } from 'react';
+import { collection, query, orderBy } from 'firebase/firestore';
+import { db } from '@/lib/firebase/config'; // تأكدي من مسار ملف الإعدادات لديكِ
+import { useCollection } from '@/hooks/useCollection'; // الملف الذي أرسلتِهِ
+import { useDoc } from '@/hooks/useDoc'; // الملف الآخر الذي أرسلتِهِ
 
-export default function NefertitiRoyalAcademy() {
+export default function RoyalUnifiedDashboard() {
   const [activeTab, setActiveTab] = useState('home');
 
+  // 1. جلب بيانات "الملكة" (نفرتيتي) الحقيقية - مثل النقاط XP
+  // افترضي أن معرف المستخدم مخزن في مكان ما بعد تسجيل الدخول
+  const { data: userData } = useDoc<any>(null); // استبدلي null بـ doc(db, 'users', userId)
+
+  // 2. جلب "التحديات الحقيقية" من قاعدة البيانات وترتيبها
+  const challengesQuery = useMemo(() => 
+    query(collection(db, 'challenges'), orderBy('createdAt', 'desc')), 
+  []);
+  const { data: realChallenges, isLoading: loadingChallenges } = useCollection<any>(challengesQuery);
+
   return (
-    <div style={mainLayout}>
-      {/* 1. التاج الملكي (Navbar) */}
-      <nav style={navBarStyle}>
-        <div style={logoStyle}>🏺 نفرتيتي الملكية</div>
-        <div style={navLinksContainer}>
-          <button onClick={() => setActiveTab('home')} style={activeTab === 'home' ? activeNavLink : navLink}>العرش</button>
-          <button onClick={() => setActiveTab('goals')} style={activeTab === 'goals' ? activeNavLink : navLink}>المسارات</button>
-          <button onClick={() => setActiveTab('challenges')} style={activeTab === 'challenges' ? activeNavLink : navLink}>قاعة التحديات</button>
+    <div className="min-h-screen bg-[#05050a] text-white font-serif">
+      {/* الشريط العلوي الملكي */}
+      <nav className="flex justify-between items-center p-4 bg-black/80 border-b-2 border-[#D4AF37] sticky top-0 z-50">
+        <div className="text-[#D4AF37] text-2xl font-bold">🏺 نفرتيتي الملكية</div>
+        <div className="flex gap-8">
+          <button onClick={() => setActiveTab('home')} className={activeTab === 'home' ? "text-[#D4AF37] border-b-2 border-[#D4AF37]" : ""}>العرش</button>
+          <button onClick={() => setActiveTab('goals')} className={activeTab === 'goals' ? "text-[#D4AF37] border-b-2 border-[#D4AF37]" : ""}>المسارات</button>
+          <button onClick={() => setActiveTab('challenges')} className={activeTab === 'challenges' ? "text-[#D4AF37] border-b-2 border-[#D4AF37]" : ""}>قاعة التحديات</button>
         </div>
-        <div style={xpBadge}>XP 1250 ✨</div>
+        <div className="bg-[#D4AF37]/20 px-4 py-2 rounded-full border border-[#D4AF37] text-[#D4AF37] font-bold">
+          XP {userData?.points || 1250} ✨
+        </div>
       </nav>
 
-      {/* 2. منطقة المحتوى الملكي */}
-      <main style={contentArea}>
-        
-        {/* قسم العرش والترحيب (يحتوي على فيديو حتشبسوت) */}
-        {activeTab === 'home' && (
-          <div style={heroSection}>
-            <div style={videoContainer}>
-              {/* ربط الفيديو الذي أرسلتِه ليكون خلفية ترحيبية */}
-              <iframe 
-                src="https://www.youtube.com/embed/TNtIUkPaG30?autoplay=1&mute=1&loop=1&playlist=TNtIUkPaG30&controls=0"
-                style={backgroundVideo}
-                frameBorder="0"
-                allow="autoplay; encrypted-media"
-              ></iframe>
-              <div style={videoOverlay}></div>
-            </div>
-            
-            <div style={heroTextContent}>
-              <h1 style={royalTitle}>أهلاً بكِ في عرشك، نفرتيتي</h1>
-              <p style={sloganStyle}>"نحن لا نبني مشروعاً، نحن نعيد صياغة الهوية"</p>
-              <div style={progressCard}>
-                <span style={{color: '#D4AF37'}}>تقدم الهوية الملكية</span>
-                <div style={progressBarBase}><div style={progressBarFill}></div></div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* قسم المسارات (الأهداف) */}
-        {activeTab === 'goals' && (
-          <div style={sectionAnimation}>
-            <h2 style={sectionHeader}>المسارات الملكية لإتقان اللهجة</h2>
-            <div style={gridStyle}>
-              {['إتقان اللهجة المصرية', 'فهم الثقافة والقيم', 'الاحتراف العملي'].map((title, i) => (
-                <div key={i} style={goalCard}>
-                  <div style={{fontSize: '40px', marginBottom: '10px'}}>🏺</div>
-                  <h3 style={{color: '#D4AF37'}}>{title}</h3>
-                  <p style={{fontSize: '0.8rem', color: '#ccc'}}>ابدئي رحلة السحر والبيان</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* قسم قاعة توت عنخ آمون السرية (التحديات) */}
+      <main className="container mx-auto py-12 px-6">
+        {/* قسم التحديات الحقيقية */}
         {activeTab === 'challenges' && (
-          <div style={sectionAnimation}>
-            <h2 style={sectionHeader}>تحديات اليوم الملكية</h2>
-            <div style={challengeStack}>
-              <div style={challengeItem}>
-                <span>🔓 تحدي النطق السحري (صوت حتشبسوت)</span>
-                <span style={{color: '#D4AF37'}}>+50 XP</span>
+          <div className="animate-fadeIn">
+            <h2 className="text-[#D4AF37] text-4xl text-center mb-12">تحديات اليوم الملكية</h2>
+            
+            {loadingChallenges ? (
+              <p className="text-center text-gray-400">جاري فتح سجلات المملكة...</p>
+            ) : (
+              <div className="flex flex-col gap-6 max-w-2xl mx-auto">
+                {realChallenges?.map((challenge) => (
+                  <div key={challenge.id} className="p-6 bg-white/5 rounded-2xl border-r-8 border-[#D4AF37] flex justify-between items-center hover:bg-white/10 transition-all">
+                    <div>
+                      <h3 className="text-xl font-bold">{challenge.title}</h3>
+                      <p className="text-gray-400 text-sm">{challenge.description}</p>
+                    </div>
+                    <span className="text-[#D4AF37] font-bold">+{challenge.xpReward} XP</span>
+                  </div>
+                ))}
+                
+                {(!realChallenges || realChallenges.length === 0) && (
+                  <p className="text-center text-gray-500 italic">لا توجد تحديات نشطة اليوم. ارتاحي يا ملكة.</p>
+                )}
               </div>
-              <div style={challengeItemDisabled}>
-                <span>🔒 لغز الهوية المصرية (مغلق حالياً)</span>
-                <span style={{color: '#666'}}>قريباً</span>
-              </div>
-            </div>
+            )}
           </div>
         )}
 
+        {/* قسم العرش مع فيديو حتشبسوت */}
+        {activeTab === 'home' && (
+          <div className="text-center">
+             <div className="relative h-[50vh] rounded-[40px] overflow-hidden mb-10 shadow-[0_0_50px_rgba(212,175,55,0.3)]">
+                <iframe 
+                  src="https://www.youtube.com/embed/TNtIUkPaG30?autoplay=1&mute=1&loop=1&playlist=TNtIUkPaG30&controls=0"
+                  className="absolute inset-0 w-full h-full object-cover opacity-50"
+                  allow="autoplay"
+                ></iframe>
+                <div className="absolute inset-0 flex flex-col justify-center items-center bg-gradient-to-t from-[#05050a] to-transparent">
+                  <h1 className="text-5xl text-[#D4AF37] mb-4">أهلاً بكِ في عرشك، نفرتيتي</h1>
+                  <p className="text-xl italic">"نحن لا نبني مشروعاً، نحن نعيد صياغة الهوية"</p>
+                </div>
+             </div>
+          </div>
+        )}
+        
+        {/* قسم المسارات */}
+        {activeTab === 'goals' && (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {['إتقان اللهجة', 'فهم الثقافة', 'الاحتراف العملي'].map((path, i) => (
+              <div key={i} className="bg-white/5 p-10 rounded-[30px] border border-[#D4AF37]/30 text-center hover:scale-105 transition-transform cursor-pointer">
+                <div className="text-4xl mb-4">🏺</div>
+                <h3 className="text-[#D4AF37] text-xl font-bold">{path}</h3>
+              </div>
+            ))}
+          </div>
+        )}
       </main>
     </div>
   );
 }
-
-// --- التنسيقات الفخمة (CSS-in-JS) ---
-
-const mainLayout: CSSProperties = {
-  background: '#05050a',
-  minHeight: '100vh',
-  color: '#fff',
-  fontFamily: 'serif',
-  overflowX: 'hidden'
-};
-
-const navBarStyle: CSSProperties = {
-  display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-  padding: '15px 40px', background: 'rgba(0,0,0,0.8)',
-  borderBottom: '2px solid #D4AF37', position: 'sticky', top: 0, zIndex: 1000
-};
-
-const logoStyle: CSSProperties = { color: '#D4AF37', fontSize: '1.6rem', fontWeight: 'bold' };
-const navLinksContainer: CSSProperties = { display: 'flex', gap: '30px' };
-const navLink: CSSProperties = { background: 'none', border: 'none', color: '#fff', cursor: 'pointer', fontSize: '1.1rem' };
-const activeNavLink: CSSProperties = { ...navLink, color: '#D4AF37', borderBottom: '2px solid #D4AF37' };
-const xpBadge: CSSProperties = { background: 'rgba(212, 175, 55, 0.2)', padding: '10px 20px', borderRadius: '30px', border: '1px solid #D4AF37', color: '#D4AF37', fontWeight: 'bold' };
-
-const contentArea: CSSProperties = { padding: '40px 20px', textAlign: 'center' };
-
-const heroSection: CSSProperties = { position: 'relative', height: '70vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', borderRadius: '40px', overflow: 'hidden' };
-const videoContainer: CSSProperties = { position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: -1 };
-const backgroundVideo: CSSProperties = { width: '100%', height: '100%', objectFit: 'cover', opacity: 0.4 };
-const videoOverlay: CSSProperties = { position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'linear-gradient(to bottom, transparent, #05050a)' };
-
-const heroTextContent: CSSProperties = { zIndex: 1, padding: '20px' };
-const royalTitle: CSSProperties = { fontSize: '3.5rem', color: '#D4AF37', textShadow: '0 0 20px rgba(212,175,55,0.5)' };
-const sloganStyle: CSSProperties = { fontSize: '1.4rem', fontStyle: 'italic', marginBottom: '30px' };
-
-const progressCard: CSSProperties = { background: 'rgba(255,255,255,0.05)', padding: '20px', borderRadius: '25px', border: '1px solid rgba(212, 175, 55, 0.2)', width: '400px', margin: '0 auto' };
-const progressBarBase: CSSProperties = { width: '100%', height: '10px', background: '#000', borderRadius: '10px', marginTop: '15px' };
-const progressBarFill: CSSProperties = { width: '70%', height: '100%', background: 'linear-gradient(90deg, #D4AF37, #f1c40f)', borderRadius: '10px' };
-
-const gridStyle: CSSProperties = { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '30px', maxWidth: '1000px', margin: '40px auto' };
-const goalCard: CSSProperties = { background: 'rgba(255,255,255,0.03)', padding: '40px', borderRadius: '30px', border: '1px solid rgba(212, 175, 55, 0.2)', cursor: 'pointer', transition: '0.3s' };
-
-const sectionHeader: CSSProperties = { color: '#D4AF37', fontSize: '2.5rem', marginBottom: '40px' };
-const challengeStack: CSSProperties = { display: 'flex', flexDirection: 'column', gap: '20px', alignItems: 'center' };
-const challengeItem: CSSProperties = { width: '100%', maxWidth: '600px', padding: '25px', background: 'rgba(255,255,255,0.05)', borderRadius: '20px', display: 'flex', justifyContent: 'space-between', borderRight: '6px solid #D4AF37' };
-const challengeItemDisabled: CSSProperties = { ...challengeItem, opacity: 0.4, borderRight: '6px solid #666' };
-
-const sectionAnimation: CSSProperties = { animation: 'fadeIn 0.8s ease-out' };
