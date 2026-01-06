@@ -1,131 +1,57 @@
-'use client';
-import React, { useState } from 'react';
-import { 
-  User, BookOpen, Trophy, ShoppingBag, Settings, 
-  MapPin, Plane, Car, Hotel, ShoppingCart, 
-  Layout, Star, Volume2, Users, Upload, ChevronRight,
-  Globe, Landmark, Moon
-} from 'lucide-react';
+"use client";
+import React, { useState, CSSProperties } from 'react';
 
-// --- المكونات الفرعية الملكية ---
-
-const SidebarItem = ({ icon: Icon, label, active, onClick, badge }: any) => (
-  <button 
-    onClick={onClick}
-    className={`w-full flex items-center justify-between p-4 mb-2 transition-all duration-300 rounded-2xl ${
-      active ? 'bg-amber-500 text-black shadow-lg shadow-amber-500/20' : 'text-gray-400 hover:bg-white/5 hover:text-amber-200'
-    }`}
-  >
-    <div className="flex items-center gap-4">
-      <Icon size={20} />
-      <span className="font-bold text-sm">{label}</span>
-    </div>
-    {badge && <span className="text-[10px] bg-amber-500/20 text-amber-500 px-2 py-0.5 rounded-full border border-amber-500/30">{badge}</span>}
-  </button>
-);
-
-export default function App() {
-  const [tab, setTab] = useState('main'); 
-  const [lang, setLang] = useState('ar'); // ar, en, hie
+export default function RoyalDashboard() {
+  const [currentSection, setCurrentSection] = useState('home'); // للتحكم في الأقسام داخل الصفحة
 
   return (
-    <div className="min-h-screen bg-[#020408] text-white flex overflow-hidden font-['Cairo']" dir="rtl">
-      
-      {/* 1. القائمة الجانبية الملكية المحدثة */}
-      <aside className="w-80 bg-black/50 border-l border-white/5 p-6 flex flex-col hidden lg:flex">
-        <div className="mb-10 px-4">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-amber-500 rounded-full flex items-center justify-center shadow-[0_0_15px_rgba(245,158,11,0.5)]">👑</div>
-            <h1 className="text-2xl font-black text-amber-500 tracking-tighter italic">YALLA MASRY</h1>
-          </div>
-          <p className="text-[10px] text-gray-500 mr-11 uppercase tracking-[0.2em]">The Royal Identity</p>
+    <div style={mainBackground}>
+      {/* 1. التاج (Header) - القائمة العلوية المرتبة */}
+      <nav style={navBarStyle}>
+        <div style={logoStyle}>🏺 نفرتيتي الملكية</div>
+        <div style={navLinksContainer}>
+          <button onClick={() => setCurrentSection('home')} style={navLink}>الرئيسية</button>
+          <button onClick={() => setCurrentSection('goals')} style={navLink}>أهدافي</button>
+          <button onClick={() => setCurrentSection('challenges')} style={navLink}>التحديات</button>
         </div>
-        
-        <nav className="flex-1 overflow-y-auto custom-scrollbar">
-          <p className="text-[10px] text-gray-600 mb-4 px-4 uppercase tracking-widest font-bold">القائمة الرئيسية</p>
-          <SidebarItem icon={Layout} label="العرش (الرئيسية)" active={tab === 'main'} onClick={() => setTab('main')} />
-          <SidebarItem icon={MapPin} label="محاكاة الواقع" active={tab === 'journey'} onClick={() => setTab('journey')} badge="LIVE" />
-          
-          <p className="text-[10px] text-gray-600 my-6 px-4 uppercase tracking-widest font-bold">المرافق الملكية</p>
-          <SidebarItem icon={Landmark} label="المتحف الوطني" active={tab === 'museum'} onClick={() => window.location.href = '/museum'} />
-          <SidebarItem icon={Moon} label="المسجد العتيق" active={tab === 'mosque'} onClick={() => setTab('mosque')} />
-          <SidebarItem icon={BookOpen} label="خزانة الدروس" active={tab === 'lessons'} onClick={() => setTab('lessons')} />
-          
-          <p className="text-[10px] text-gray-600 my-6 px-4 uppercase tracking-widest font-bold">الإدارة</p>
-          <SidebarItem icon={Settings} label="لوحة التحكم" active={tab === 'admin'} onClick={() => setTab('admin')} />
-        </nav>
+        <div style={pointsBadge}>XP 1250 ✨</div>
+      </nav>
 
-        {/* 🌎 مبدل اللغات الملكي */}
-        <div className="mt-6 p-4 bg-white/5 rounded-3xl border border-white/5">
-          <div className="flex items-center gap-2 mb-3 text-amber-500">
-            <Globe size={16} />
-            <span className="text-[10px] font-black uppercase">لغة الأكاديمية</span>
-          </div>
-          <div className="flex gap-2">
-            {['AR', 'EN', '🏺'].map((l) => (
-              <button 
-                key={l}
-                onClick={() => setLang(l.toLowerCase())}
-                className={`flex-1 py-1 rounded-lg text-[10px] font-bold border transition ${lang === l.toLowerCase() ? 'bg-amber-500 border-amber-500 text-black' : 'border-white/10 text-gray-500 hover:border-amber-500/50'}`}
-              >
-                {l}
-              </button>
-            ))}
-          </div>
-        </div>
-      </aside>
-
-      {/* 2. منطقة المحتوى */}
-      <main className="flex-1 overflow-y-auto p-6 md:p-10 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-amber-500/5 via-transparent to-transparent">
-        
-        {/* شريط الترحيب العلوي */}
-        <div className="flex justify-between items-center mb-10">
-          <div>
-            <h2 className="text-3xl font-black text-white">مرحباً، <span className="text-amber-500">نفرتيتي</span></h2>
-            <p className="text-gray-500 text-xs mt-1">اليوم: 16 من شهر كيهك الملكي</p>
-          </div>
-          <div className="flex items-center gap-4 bg-slate-900/50 p-2 rounded-2xl border border-white/5 shadow-2xl">
-             <div className="px-4 text-center border-l border-white/10">
-                <p className="text-[10px] text-gray-500">النقاط</p>
-                <p className="text-sm font-black text-amber-500">1,250 XP</p>
-             </div>
-             <div className="w-10 h-10 bg-amber-500 rounded-xl flex items-center justify-center text-black font-black">N</div>
-          </div>
-        </div>
-
-        {/* محتوى "المسجد" كمثال للمرفق الجديد */}
-        {tab === 'mosque' && (
-          <div className="animate-in fade-in slide-in-from-top-4 duration-700">
-             <div className="bg-gradient-to-br from-emerald-900/20 to-black p-10 rounded-[40px] border border-emerald-500/20 text-center">
-                <div className="text-6xl mb-6">🕌</div>
-                <h3 className="text-3xl font-black text-emerald-400 mb-4 font-serif">قاعة المسجد العتيق</h3>
-                <p className="text-gray-400 max-w-xl mx-auto leading-relaxed text-lg">
-                  هنا نتعلم إتيكيت الزيارة، لغة الروح، ومصطلحات التراحم المصرية الأصيلة.
-                </p>
-                <button className="mt-8 px-10 py-3 bg-emerald-500 text-black rounded-full font-black shadow-lg shadow-emerald-500/20 hover:scale-105 transition">دخول القاعة</button>
-             </div>
+      {/* 2. محتوى الصفحة المتغير */}
+      <main style={contentArea}>
+        {currentSection === 'home' && (
+          <div style={sectionFadeIn}>
+            <h1 style={royalTitle}>أهلاً بكِ في عرشك، نفرتيتي</h1>
+            <p style={sloganStyle}>"نحن لا نبني مشروعاً، نحن نعيد صياغة الهوية"</p>
+            <div style={progressCard}>
+              <span>تقدم الهوية الملكية</span>
+              <div style={progressBarContainer}>
+                <div style={progressBarFill}></div>
+              </div>
+            </div>
           </div>
         )}
 
-        {/* واجهة "الرئيسية" كما هي منظمة */}
-        {tab === 'main' && (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-in fade-in duration-700">
-            <div className="lg:col-span-2 space-y-6">
-               <div className="bg-slate-900/40 p-8 rounded-[40px] border border-amber-500/10 relative overflow-hidden group">
-                  <div className="absolute -right-20 -top-20 w-64 h-64 bg-amber-500/5 rounded-full blur-3xl group-hover:bg-amber-500/10 transition-all" />
-                  <h3 className="text-2xl font-black mb-4 italic text-amber-500">مهمتكِ الملكية القادمة</h3>
-                  <p className="text-gray-400 leading-relaxed mb-6">لقد وصلتي إلى مطار القاهرة في المحاكاة، عم عبده بانتظاركِ بالخارج. هل أنتِ جاهزة للتحدث بالمصرية؟</p>
-                  <button onClick={() => setTab('journey')} className="px-8 py-3 bg-amber-500 text-black rounded-2xl font-black flex items-center gap-2">ابدأي المحاكاة الآن <ChevronRight size={18} /></button>
-               </div>
+        {currentSection === 'goals' && (
+          <div style={sectionFadeIn}>
+            <h2 style={sectionTitle}>المسارات الملكية</h2>
+            <div style={gridStyle}>
+              {['إتقان اللهجة', 'فهم الثقافة', 'الاحتراف العملي'].map((goal, i) => (
+                <div key={i} style={goalCard}>
+                  <div style={{fontSize: '30px'}}>🏺</div>
+                  <h3>{goal}</h3>
+                </div>
+              ))}
             </div>
-            <div className="space-y-6">
-               <div className="bg-amber-500/10 p-6 rounded-[35px] border border-amber-500/20">
-                  <h4 className="font-black text-amber-500 mb-4 flex items-center gap-2"><Star size={16}/> إنجاز الهوية</h4>
-                  <div className="h-2 bg-black/40 rounded-full overflow-hidden">
-                    <div className="h-full bg-amber-500 w-[75%] shadow-[0_0_15px_#f59e0b]"></div>
-                  </div>
-                  <p className="text-[10px] mt-2 text-gray-500 font-bold">تبقى 25% لتصبحي "ملكة الفصاحة"</p>
-               </div>
+          </div>
+        )}
+
+        {currentSection === 'challenges' && (
+          <div style={sectionFadeIn}>
+            <h2 style={sectionTitle}>تحديات اليوم</h2>
+            <div style={challengeList}>
+              <div style={challengeItem}>🔓 تحدي النطق السحري <span style={goldText}>+50 XP</span></div>
+              <div style={challengeItem}>🔒 لغز الهوية المصرية <span style={grayText}>(مغلق)</span></div>
             </div>
           </div>
         )}
@@ -133,3 +59,55 @@ export default function App() {
     </div>
   );
 }
+
+// --- التنسيقات الملكية (الترتيب الفخم) ---
+
+const mainBackground: CSSProperties = {
+  background: 'radial-gradient(circle at center, #1a1a2e 0%, #05050a 100%)',
+  minHeight: '100vh',
+  color: '#fff',
+  fontFamily: 'serif',
+};
+
+const navBarStyle: CSSProperties = {
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  padding: '20px 50px',
+  background: 'rgba(255, 255, 255, 0.02)',
+  backdropFilter: 'blur(10px)',
+  borderBottom: '1px solid rgba(212, 175, 55, 0.2)',
+  position: 'sticky',
+  top: 0,
+  zIndex: 100
+};
+
+const logoStyle: CSSProperties = { color: '#D4AF37', fontSize: '1.5rem', fontWeight: 'bold' };
+const navLinksContainer: CSSProperties = { display: 'flex', gap: '30px' };
+const navLink: CSSProperties = { background: 'none', border: 'none', color: '#fff', cursor: 'pointer', fontSize: '1.1rem' };
+const pointsBadge: CSSProperties = { background: 'rgba(212, 175, 55, 0.1)', padding: '8px 15px', borderRadius: '20px', border: '1px solid #D4AF37', color: '#D4AF37' };
+
+const contentArea: CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  padding: '60px 20px',
+  textAlign: 'center'
+};
+
+const royalTitle: CSSProperties = { fontSize: '3.5rem', color: '#D4AF37', marginBottom: '10px' };
+const sloganStyle: CSSProperties = { fontSize: '1.2rem', fontStyle: 'italic', color: 'rgba(255,255,255,0.7)', marginBottom: '40px' };
+
+const progressCard: CSSProperties = { background: 'rgba(255,255,255,0.05)', padding: '20px', borderRadius: '20px', width: '100%', maxWidth: '500px', border: '1px solid rgba(212, 175, 55, 0.1)' };
+const progressBarContainer: CSSProperties = { width: '100%', height: '8px', background: '#111', borderRadius: '10px', marginTop: '10px', overflow: 'hidden' };
+const progressBarFill: CSSProperties = { width: '65%', height: '100%', background: 'linear-gradient(90deg, #D4AF37, #f1c40f)' };
+
+const gridStyle: CSSProperties = { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px', width: '100%', maxWidth: '900px' };
+const goalCard: CSSProperties = { padding: '30px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px', border: '1px solid rgba(212, 175, 55, 0.2)', cursor: 'pointer' };
+
+const sectionFadeIn: CSSProperties = { animation: 'fadeIn 0.5s ease-in' };
+const sectionTitle: CSSProperties = { color: '#D4AF37', fontSize: '2rem', marginBottom: '30px' };
+const challengeList: CSSProperties = { width: '100%', maxWidth: '600px', display: 'flex', flexDirection: 'column', gap: '15px' };
+const challengeItem: CSSProperties = { padding: '20px', background: 'rgba(255,255,255,0.05)', borderRadius: '15px', textAlign: 'right', display: 'flex', justifyContent: 'space-between', borderRight: '4px solid #D4AF37' };
+const goldText: CSSProperties = { color: '#D4AF37' };
+const grayText: CSSProperties = { color: '#666' };
