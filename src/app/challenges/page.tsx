@@ -1,198 +1,142 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import { Star, Zap, Trophy, ShieldCheck, Flame, ArrowRight } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+import Confetti from 'react-confetti';
+import { motion, AnimatePresence } from 'framer-motion';
 
-/**
- * أكاديمية نفرتيتي الملكية - نسخة مطورة ومتوافقة مع React & Vercel
- * تم إصلاح أخطاء الـ Console وتنسيق محرك الصوت.
- */
+export default function ChallengeGame() {
+  const [solved, setSolved] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });
+  const { toast } = useToast();
 
-export default function App() {
-  const [points, setPoints] = useState(0);
-  const [currentChallenge] = useState(0);
-  const [feedback, setFeedback] = useState({ show: false, isCorrect: false, msg: "" });
-  const [micStatus, setMicStatus] = useState("اضغطي باستمرار للتسجيل");
-  const [isVoiceInitialized, setIsVoiceInitialized] = useState(false);
+  // تحديث حجم الشاشة للقصاصات الملونة (Confetti)
+  useEffect(() => {
+    setWindowSize({ width: window.innerWidth, height: window.innerHeight });
+  }, []);
 
-  const challenges = [
-    {
-      title: "الدرس الأول: التحية والسؤال عن الحال",
-      arabic: "إزيك عامل إيه؟",
-      english: "How are you?",
-      dialogue: [
-        { name: "منى", text: "إزيك يا هبة عاملة إيه؟", color: "text-yellow-500", border: "border-yellow-500" },
-        { name: "هبة", text: "الحمد لله، إنتي اللي عاملة إيه النهاردة؟", color: "text-blue-400", border: "border-blue-400" }
-      ],
-      question: "عندما تقابلين صديقتكِ في قصر النيل، ماذا تقولين للسؤال عن حالها بلهجة مصرية أصيلة؟",
-      options: [
-        { text: "كيف حالكِ اليوم؟", correct: false, feedback: "هذه لغة عربية فصحى يا عزيزتي، نحن هنا في رحاب العامية المصرية." },
-        { text: "إزيك عاملة إيه؟", correct: true, feedback: "أحسنتِ أيتها الحسناء! هذه هي التحية المصرية التي تفتح القلوب." },
-        { text: "إيه الأخبار؟", correct: false, feedback: "تعبير صحيح، لكنه يُستخدم عادة لسؤال شخص لم تريْه منذ مدة عن أخباره." }
-      ],
-      audioText: "إزيك يا هبة عاملة إيه؟ .. الحمد لله، إنتي اللي عاملة إيه النهاردة؟"
-    }
-  ];
+  const handleCorrectAnswer = () => {
+    if (solved) return;
 
-  const current = challenges[currentChallenge];
+    setSolved(true);
+    setShowConfetti(true);
 
-  // تفعيل محرك الصوت
-  const initVoice = () => {
-    if (!isVoiceInitialized) {
-      const msg = new SpeechSynthesisUtterance("");
-      window.speechSynthesis.speak(msg);
-      setIsVoiceInitialized(true);
-    }
-  };
+    // تحديث نقاط النيل في النظام الملكي
+    const currentPoints = parseInt(localStorage.getItem('nilePoints') || '100');
+    const newPoints = currentPoints + 50; // مكافأة أكبر للتحديات الملكية
+    localStorage.setItem('nilePoints', newPoints.toString());
 
-  const playLessonAudio = () => {
-    window.speechSynthesis.cancel();
-    const speech = new SpeechSynthesisUtterance(current.audioText);
-    const voices = window.speechSynthesis.getVoices();
-    const arabicVoice = voices.find(v => v.lang.includes('ar-EG')) || voices.find(v => v.lang.includes('ar'));
-    
-    if (arabicVoice) speech.voice = arabicVoice;
-    speech.lang = 'ar-EG';
-    speech.rate = 0.8;
-    window.speechSynthesis.speak(speech);
-  };
+    // تنبيه باقي أجزاء الأكاديمية (اللوحة الرئيسية) بتحديث النقاط
+    window.dispatchEvent(new StorageEvent('storage', {
+        key: 'nilePoints',
+        newValue: newPoints.toString(),
+    }));
 
-  const checkAnswer = (option) => {
-    setFeedback({
-      show: true,
-      isCorrect: option.correct,
-      msg: option.feedback
+    toast({
+        title: "🎊 نصر ملكي جديد!",
+        description: "لقد أضفتِ 50 نقطة نيل إلى خزائنكِ.",
     });
 
-    const notifyText = option.correct ? "أحسنتِ أيتها الحسناء" : "حاولي مرة أخرى أيتها الجميلة";
-    const msg = new SpeechSynthesisUtterance(notifyText);
-    msg.lang = 'ar-EG';
-    window.speechSynthesis.speak(msg);
-
-    if (option.correct) {
-      setPoints(prev => prev + 100);
-    }
-  };
-
-  const handleMicStart = () => setMicStatus("جيمناي تستمع لنبرتكِ الملكية...");
-  const handleMicEnd = () => {
-    setMicStatus("نطق ملكي متقن! أضيفي 100 نقطة");
-    setPoints(prev => prev + 100);
-    setTimeout(() => alert("تم الإتقان أيتها الملكة!"), 500);
-  };
-
-  const getRank = () => {
-    if (points >= 200) return "ملكة النيل 👑";
-    if (points >= 100) return "أميرة فرعونية 🛡️";
-    return "زائرة ملكية";
+    setTimeout(() => setShowConfetti(false), 6000);
   };
 
   return (
-    <div 
-      className="min-h-screen text-white p-4 md:p-8 flex flex-col items-center selection:bg-yellow-500/30" 
-      onClick={initVoice}
-      style={{ background: 'radial-gradient(circle, #001a4d 0%, #000b21 100%)' }}
-    >
-      <header className="text-center mb-10">
-        <h1 className="text-5xl md:text-7xl font-bold text-[#D4AF37] mb-2 drop-shadow-lg font-serif">
-          أكاديمية نفرتيتي الملكية
-        </h1>
-        <p className="text-blue-200 tracking-widest font-bold">
-          بوابة عبور الملكات إلى سحر اللهجة المصرية
-        </p>
-      </header>
+    <div className="min-h-screen bg-[#05050a] flex items-center justify-center p-4 md:p-8 font-serif rtl" dir="rtl">
+      {showConfetti && (
+        <Confetti 
+          width={windowSize.width} 
+          height={windowSize.height} 
+          recycle={false} 
+          numberOfPieces={400} 
+          colors={['#D4AF37', '#FFF1C1', '#AA891F', '#ffffff']}
+        />
+      )}
 
-      <div className="w-full max-w-3xl space-y-6">
-        <div className="border-2 border-[#D4AF37] bg-[#002366]/90 p-5 rounded-3xl flex justify-between items-center shadow-2xl sticky top-4 z-50">
-          <div className="flex items-center gap-4">
-            <span className="text-4xl animate-bounce">🏺</span>
-            <div>
-              <p className="text-xs text-blue-300 font-bold uppercase">رصيد الفخر الملكي</p>
-              <p className="text-3xl font-black text-white">
-                {points} <span className="text-[#D4AF37]">نقاط نيل</span>
-              </p>
-            </div>
-          </div>
-          <div className="px-6 py-2 rounded-full border-2 border-[#D4AF37] text-[#D4AF37] font-black bg-blue-900/50">
-            {getRank()}
-          </div>
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="relative bg-white/5 backdrop-blur-2xl p-8 md:p-12 rounded-[50px] border-2 border-[#D4AF37]/30 shadow-[0_0_80px_rgba(212,175,55,0.1)] max-w-2xl w-full text-center overflow-hidden"
+      >
+        {/* شارة المستوى في الزاوية */}
+        <div className="absolute top-6 right-8 flex items-center gap-2 bg-[#D4AF37]/10 px-4 py-2 rounded-full border border-[#D4AF37]/20">
+          <Flame className="text-[#D4AF37] animate-pulse" size={16} />
+          <span className="text-[#D4AF37] text-xs font-black">تحدي المبتدئين</span>
         </div>
 
-        <main className="bg-white/10 backdrop-blur-xl border-2 border-[#D4AF37] rounded-[2.5rem] p-6 md:p-12 space-y-12 shadow-2xl">
-          <section className="text-center space-y-4">
-            <h2 className="text-3xl font-black text-[#D4AF37]">{current.title}</h2>
-            <div className="flex justify-center items-center gap-6 text-2xl bg-white/5 py-4 rounded-2xl border border-white/10">
-              <span className="font-bold">{current.arabic}</span>
-              <span className="text-[#D4AF37]">➜</span>
-              <span className="italic text-blue-200">{current.english}</span>
-            </div>
-          </section>
-
-          <section className="space-y-6">
-            <h3 className="text-xl font-bold text-[#D4AF37] border-r-4 border-[#D4AF37] pr-4">
-              الحوار التعليمي (منى وهبة)
-            </h3>
-            <div className="space-y-4 bg-black/30 p-8 rounded-3xl">
-              {current.dialogue.map((line, idx) => (
-                <div key={idx} className={`p-4 rounded-2xl border-r-4 bg-white/5 ${line.border}`}>
-                  <span className={`${line.color} font-black ml-2`}>{line.name}:</span> {line.text}
-                </div>
-              ))}
-            </div>
-            <button 
-              onClick={playLessonAudio}
-              className="w-full py-4 rounded-2xl text-xl font-black bg-gradient-to-r from-[#bf953f] to-[#D4AF37] text-[#002366] hover:scale-[1.02] active:scale-95 transition-all shadow-lg"
+        <Zap className="mx-auto text-[#D4AF37] mb-6 drop-shadow-[0_0_15px_rgba(212,175,55,0.5)]" size={60} />
+        
+        <p className="text-[#D4AF37] text-sm mb-2 font-bold tracking-[0.2em] uppercase">المهمة الحالية</p>
+        <h2 className="text-3xl md:text-4xl font-black text-white mb-10 leading-relaxed">
+          ما هي الكلمة المصرية التي تعني <br/>
+          <span className="text-[#D4AF37] underline decoration-dashed decoration-1 underline-offset-8">"How are you?"</span>
+        </h2>
+        
+        <div className="grid grid-cols-1 gap-4">
+          {[
+            { id: 0, text: 'إزيك؟', correct: true },
+            { id: 1, text: 'فينك؟', correct: false },
+            { id: 2, text: 'إيه ده؟', correct: false }
+          ].map((ans) => (
+            <motion.button 
+              key={ans.id}
+              whileHover={{ scale: solved ? 1 : 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => {
+                if (ans.correct) {
+                  handleCorrectAnswer();
+                } else if (!solved) {
+                  toast({ 
+                    variant: 'destructive', 
+                    title: "محاولة غير موفقـة", 
+                    description: "ركزي يا ملكة، يمكنكِ فعلها!" 
+                  });
+                }
+              }}
+              disabled={solved}
+              className={`group relative p-6 rounded-[25px] font-bold text-xl border-2 transition-all duration-300 ${
+                solved && ans.correct 
+                ? 'bg-[#D4AF37] border-[#D4AF37] text-black shadow-[0_0_30px_rgba(212,175,55,0.4)]' 
+                : 'bg-white/5 border-white/10 text-gray-300 hover:border-[#D4AF37]/50 hover:bg-white/10'
+              } ${solved && !ans.correct ? 'opacity-30' : ''}`}
             >
-              🔊 نطق الحوار بصوت المعلمة جيمناي
-            </button>
-          </section>
+              <div className="flex justify-between items-center">
+                <span>{ans.text}</span>
+                {solved && ans.correct && <ShieldCheck size={24} />}
+              </div>
+            </motion.button>
+          ))}
+        </div>
 
-          <section className="mt-12 space-y-8 border-t border-white/10 pt-10">
-            <div className="flex items-center gap-3">
-              <span className="text-3xl">🛡️</span>
-              <h3 className="text-2xl font-black text-[#D4AF37]">تحدي الذكاء الملكي</h3>
-            </div>
-            <p className="text-xl leading-relaxed">{current.question}</p>
-            <div className="grid gap-4">
-              {current.options.map((opt, idx) => (
-                <button 
-                  key={idx}
-                  onClick={() => checkAnswer(opt)}
-                  className="p-5 rounded-2xl border-2 border-white/20 hover:border-[#D4AF37] hover:bg-white/5 transition-all text-right text-xl font-medium"
-                >
-                  {opt.text}
-                </button>
-              ))}
-            </div>
-          </section>
-
-          {feedback.show && (
-            <section className="mt-10 space-y-8 transition-all duration-500">
-              <div className={`p-8 rounded-3xl border-2 relative shadow-2xl text-center ${feedback.isCorrect ? 'border-green-500 bg-green-500/10' : 'border-red-500 bg-red-500/10'}`}>
-                <div className="absolute -top-5 right-6 bg-[#D4AF37] text-[#002366] px-4 py-1 text-sm font-black rounded-lg">
-                  المعلمة جيمناي
+        {/* لوحة النتائج بعد الحل */}
+        <AnimatePresence>
+          {solved && (
+            <motion.div 
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              className="mt-10 pt-8 border-t border-white/10"
+            >
+              <div className="flex justify-center gap-4 mb-6">
+                <div className="flex flex-col items-center">
+                  <div className="w-12 h-12 bg-[#D4AF37]/20 rounded-full flex items-center justify-center text-[#D4AF37] mb-2">
+                    <Trophy size={20} />
+                  </div>
+                  <span className="text-[10px] text-gray-500 font-bold tracking-tighter uppercase">الجائزة</span>
+                  <span className="text-sm font-black">+50 نقطة</span>
                 </div>
-                <p className={`text-2xl font-bold leading-relaxed ${feedback.isCorrect ? 'text-green-400' : 'text-red-400'}`}>
-                  {feedback.isCorrect ? "✨ " : "⚠️ "}{feedback.msg}
-                </p>
               </div>
 
-              <div className="text-center space-y-6 py-6">
-                <p className="text-[#D4AF37] text-2xl font-black animate-pulse">
-                  "يلا أيتها الفرعونة.. انطقي هذه الجملة بصوتكِ"
-                </p>
-                <button 
-                  onMouseDown={handleMicStart}
-                  onMouseUp={handleMicEnd}
-                  className="w-28 h-28 rounded-full border-4 border-[#D4AF37] flex items-center justify-center text-5xl bg-blue-900/40 hover:scale-110 transition-transform shadow-[0_0_30px_rgba(212,175,55,0.4)]"
-                >
-                  🎤
+              <Link href="/simulation">
+                <button className="flex items-center justify-center gap-2 w-full bg-white text-black font-black py-4 rounded-2xl hover:bg-[#D4AF37] transition-all group">
+                  الانتقال للتحدي التالي
+                  <ArrowRight size={20} className="group-hover:translate-x-[-4px] transition-transform" />
                 </button>
-                <p className="text-lg text-blue-300 font-bold">{micStatus}</p>
-              </div>
-            </section>
+              </Link>
+            </motion.div>
           )}
-        </main>
-      </div>
+        </AnimatePresence>
+      </motion.div>
     </div>
   );
 }
