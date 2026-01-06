@@ -1,280 +1,276 @@
-"use client";
-
-import React, { useState, useEffect } from 'react';
+'use client';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
-  Crown, 
-  Sparkles, 
-  BookOpen, 
-  ChevronRight,
-  Star,
-  Compass,
-  User,
-  Lock,
-  Trophy,
-  GraduationCap,
-  LayoutDashboard,
-  LogOut,
-  PlayCircle,
-  Globe
+  User, BookOpen, Trophy, ShoppingBag, Settings, 
+  MapPin, Plane, Car, Hotel, ShoppingCart, 
+  ChevronRight, Layout, Star, LogIn
 } from 'lucide-react';
 
-// القاموس اللغوي للأكاديمية
-const translations = {
-  ar: {
-    dir: 'rtl',
-    brand: 'نفرتيتي',
-    subBrand: 'الأكاديمية الملكية',
-    nav_mosque: 'دخول المسجد',
-    nav_login: 'دخول الملكات',
-    hero_badge: 'مرحباً بكِ في عرشكِ المعرفي',
-    hero_title: 'أكاديمية نفرتيتي',
-    hero_cta: 'دخول الأكاديمية',
-    hero_secondary: 'استكشاف المناهج',
-    login_title: 'بوابة الدخول',
-    login_user: 'اسم الملكة',
-    login_pass: 'كلمة المرور',
-    login_btn: 'تأكيد السيادة',
-    dash_level: 'المستوى الثاني: سيادة فكرية',
-    dash_overview: 'لوحة التحكم',
-    dash_lessons: 'الدروس الملكية',
-    dash_challenges: 'تحديات السيادة',
-    dash_teachers: 'المعلمات',
-    dash_logout: 'تسجيل الخروج',
-    dash_progress: 'التقدم الحالي',
-    dash_status: 'لقد قطعتِ 65% من مسار استعادة المجد الملكي.',
-    lessons_title: 'منهج نور الوحي',
-    challenge_points: 'نقطة',
-    start_challenge: 'ابدأ التحدي',
-    rights: 'جميع الحقوق محفوظة • أكاديمية نفرتيتي 2026'
-  },
-  en: {
-    dir: 'ltr',
-    brand: 'Nefertiti',
-    subBrand: 'Royal Academy',
-    nav_mosque: 'Enter Mosque',
-    nav_login: 'Queens Portal',
-    hero_badge: 'Welcome to your intellectual throne',
-    hero_title: 'Nefertiti Academy',
-    hero_cta: 'Enter Academy',
-    hero_secondary: 'Explore Curriculum',
-    login_title: 'Access Portal',
-    login_user: 'Queen\'s Name',
-    login_pass: 'Access Key',
-    login_btn: 'Confirm Sovereignty',
-    dash_level: 'Level II: Intellectual Sovereignty',
-    dash_overview: 'Dashboard',
-    dash_lessons: 'Royal Lessons',
-    dash_challenges: 'Sovereignty Challenges',
-    dash_teachers: 'Instructors',
-    dash_logout: 'Logout',
-    dash_progress: 'Current Progress',
-    dash_status: 'You have completed 65% of your royal restoration path.',
-    lessons_title: 'Light of Revelation Curriculum',
-    challenge_points: 'Points',
-    start_challenge: 'Start Challenge',
-    rights: 'All Rights Reserved • Nefertiti Academy 2026'
-  }
-};
+// --- المكونات الفرعية الملكية ---
+
+const SidebarItem = ({ icon: Icon, label, active, onClick, color = "text-amber-500" }) => (
+  <div 
+    onClick={onClick}
+    className={`flex items-center gap-4 p-4 cursor-pointer transition-all duration-300 rounded-xl ${
+      active ? 'bg-amber-500/10 border-r-4 border-amber-500 text-amber-500' : 'text-gray-400 hover:text-amber-200 hover:bg-white/5'
+    }`}
+  >
+    <Icon size={24} />
+    <span className="font-bold">{label}</span>
+  </div>
+);
+
+const Card = ({ children, title, icon: Icon }) => (
+  <div className="bg-slate-900/50 backdrop-blur-md border border-amber-500/20 p-6 rounded-3xl shadow-xl">
+    <div className="flex items-center gap-3 mb-6">
+      {Icon && <Icon className="text-amber-500" size={24} />}
+      <h3 className="text-xl font-black text-white">{title}</h3>
+    </div>
+    {children}
+  </div>
+);
 
 export default function App() {
-  const [lang, setLang] = useState('ar');
-  const [view, setView] = useState('landing');
-  const [activeTab, setActiveTab] = useState('overview');
-  const [mounted, setMounted] = useState(false);
+  const [view, setView] = useState('auth'); // auth, goal, dashboard
+  const [tab, setTab] = useState('main'); // main, journey, lessons, shop, admin
+  const [journeyStep, setJourneyStep] = useState(0);
+  const [userPoints, setUserPoints] = useState(1250);
 
-  const t = translations[lang];
-
-  useEffect(() => {
-    setMounted(true);
-    document.documentElement.dir = t.dir;
-  }, [lang, t.dir]);
-
-  if (!mounted) return null;
-
-  const teachers = [
-    { name: lang === 'ar' ? "أ. نفرتيتي الكبرى" : "Prof. Nefertiti the Great", specialty: lang === 'ar' ? "السيادة الفكرية" : "Intellectual Sovereignty", image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=400&fit=crop" },
-    { name: lang === 'ar' ? "د. إيزيس النور" : "Dr. Isis of Light", specialty: lang === 'ar' ? "فلسفة الوحي" : "Philosophy of Revelation", image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=400&fit=crop" }
+  // سيناريو الرحلة الواقعية
+  const journeyStages = [
+    { id: 'airport', name: 'مطار القاهرة', char: 'ضابط الجوازات', msg: 'أهلاً بكِ يا جلالة الملكة نفرتيتي في أرض الوطن. جواز سفركِ مختوم بختم العزة.', icon: Plane },
+    { id: 'taxi', name: 'التاكسي المصري', char: 'عم عبده السائق', msg: 'نورتي المحروسة يا ست الهوانم. يلا بينا على الفندق الملكي.', icon: Car },
+    { id: 'hotel', name: 'استقبال الفندق', char: 'مدير الاستقبال', msg: 'جلالة الملكة، جناحكِ الملكي جاهز كما خططنا تماماً.', icon: Hotel },
+    { id: 'khan', name: 'خان الخليلي', char: 'تاجر التحف', msg: 'دي روح مصر اللي بنحافظ عليها في قطعنا النادرة يا فندم.', icon: ShoppingBag },
+    { id: 'grocery', name: 'البقالة', char: 'عم محمد البقال', msg: 'مصر دايماً عامرة بيكم وبأصلكم الطيب يا ملكة.', icon: ShoppingCart }
   ];
 
-  const lessons = [
-    { title: lang === 'ar' ? "الدرس الأول: مفهوم السيادة" : "Lesson I: Concept of Sovereignty", duration: "45 min", status: lang === 'ar' ? "مكتمل" : "Completed" },
-    { title: lang === 'ar' ? "الدرس الثاني: ربط الهوية" : "Lesson II: Identity Integration", duration: "60 min", status: lang === 'ar' ? "قيد التقدم" : "In Progress" }
-  ];
+  // --- شاشات العرض ---
 
-  const challenges = [
-    { title: lang === 'ar' ? "تحدي الفجر الملكي" : "Royal Dawn Challenge", points: 150 },
-    { title: lang === 'ar' ? "تحدي القراءة العميقة" : "Deep Reading Challenge", points: 200 }
-  ];
-
-  return (
-    <div className={`min-h-screen bg-[#001233] text-white font-serif selection:bg-[#FFD700] selection:text-[#001233] ${t.dir === 'rtl' ? 'text-right' : 'text-left'}`}>
-      
-      {/* Navbar */}
-      <nav className="relative z-50 border-b border-[#FFD700]/10 bg-[#001233]/90 backdrop-blur-xl px-8 py-6">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <div className="flex items-center gap-4 cursor-pointer" onClick={() => setView('landing')}>
-            <div className="p-2 border-2 border-[#FFD700] rounded-xl bg-[#FFD700]/10">
-              <Crown className="w-6 h-6 text-[#FFD700]" />
-            </div>
-            <div className="flex flex-col leading-none">
-              <span className="text-xl font-bold tracking-[0.2em] uppercase text-[#FFD700]">{t.brand}</span>
-              <span className="text-[8px] tracking-[0.1em] text-blue-200/60 uppercase">{t.subBrand}</span>
-            </div>
-          </div>
-          
-          <div className="flex items-center gap-6">
-             <button 
-                onClick={() => setLang(lang === 'ar' ? 'en' : 'ar')}
-                className="flex items-center gap-2 text-xs border border-[#FFD700]/30 px-3 py-1.5 rounded-full hover:bg-[#FFD700]/10 transition-all text-[#FFD700]"
-             >
-               <Globe size={14} />
-               {lang === 'ar' ? 'English' : 'العربية'}
-             </button>
-             <button className="hidden md:flex items-center gap-2 text-blue-100/60 hover:text-[#FFD700] text-sm transition-all">
-               <Compass size={18} className="text-[#FFD700]" />
-               {t.nav_mosque}
-             </button>
-             {view === 'landing' && (
-               <button onClick={() => setView('login')} className="px-6 py-2 bg-gradient-to-r from-[#FFD700] to-[#B8860B] text-[#001233] rounded-full font-bold text-xs">
-                 {t.nav_login}
-               </button>
-             )}
-          </div>
-        </div>
-      </nav>
-
-      {/* Landing View */}
-      {view === 'landing' && (
-        <header className="relative z-10 max-w-7xl mx-auto px-6 pt-32 pb-16 text-center">
-          <div className="inline-flex items-center gap-3 px-6 py-2 border border-[#FFD700]/30 rounded-full bg-[#FFD700]/5 text-[#FFD700] mb-8 animate-pulse">
-            <Sparkles size={14} />
-            <span className="text-[10px] uppercase tracking-widest font-bold">{t.hero_badge}</span>
-          </div>
-          <h1 className="text-6xl md:text-8xl font-bold mb-10 tracking-tighter">
-            {t.hero_title}
-          </h1>
-          <div className="flex justify-center gap-4 mt-12">
-            <button onClick={() => setView('login')} className="px-10 py-4 bg-[#FFD700] text-[#001233] rounded-full font-bold hover:scale-105 transition-all shadow-xl">
-              {t.hero_cta}
+  if (view === 'auth') {
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center p-6 font-['Cairo']" dir="rtl">
+        <div className="w-full max-w-md bg-slate-900 border-2 border-amber-500/30 p-10 rounded-[40px] text-center shadow-[0_0_50px_rgba(245,158,11,0.1)]">
+          <h1 className="text-5xl font-black text-amber-500 mb-2 tracking-tighter">YALLA MASRY</h1>
+          <p className="text-amber-100/40 mb-10 text-sm uppercase tracking-widest">The Royal Identity Academy</p>
+          <div className="space-y-4">
+            <input type="email" placeholder="البريد الإلكتروني الملكي" className="w-full bg-black/50 border border-amber-500/20 p-4 rounded-2xl text-white outline-none focus:border-amber-500 transition" />
+            <input type="password" placeholder="كلمة السر" className="w-full bg-black/50 border border-amber-500/20 p-4 rounded-2xl text-white outline-none focus:border-amber-500 transition" />
+            <button 
+              onClick={() => setView('goal')}
+              className="w-full bg-amber-500 hover:bg-amber-600 text-black font-black py-4 rounded-2xl shadow-lg transition-all transform hover:scale-[1.02]"
+            >
+              دخول الأكاديمية
             </button>
           </div>
-        </header>
-      )}
+        </div>
+      </div>
+    );
+  }
 
-      {/* Login View */}
-      {view === 'login' && (
-        <div className="min-h-[70vh] flex items-center justify-center p-6">
-          <div className="w-full max-w-md bg-[#001a4d] border border-[#FFD700]/20 rounded-[2.5rem] p-10 shadow-2xl">
-            <h2 className="text-3xl font-bold text-center text-white mb-8 uppercase tracking-widest">{t.login_title}</h2>
-            <div className="space-y-4">
-              <input type="text" placeholder={t.login_user} className="w-full bg-[#001233] border border-[#FFD700]/20 rounded-2xl py-4 px-6 text-white outline-none" />
-              <input type="password" placeholder={t.login_pass} className="w-full bg-[#001233] border border-[#FFD700]/20 rounded-2xl py-4 px-6 text-white outline-none" />
-              <button onClick={() => setView('dashboard')} className="w-full py-4 bg-[#FFD700] text-[#001233] rounded-2xl font-bold mt-4">
-                {t.login_btn}
-              </button>
+  if (view === 'goal') {
+    return (
+      <div className="min-h-screen bg-[#050505] text-white p-10 font-['Cairo'] flex flex-col items-center justify-center" dir="rtl">
+        <h2 className="text-5xl font-black text-amber-500 mb-4">حددي هدفكِ يا ملكة</h2>
+        <p className="text-amber-100/60 mb-12 text-xl">كل تفصيل خططنا له يبدأ من هنا</p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-5xl">
+          {[
+            { t: 'إتقان الفصاحة', d: 'اللغة هي وعاء الهوية', i: '📜' },
+            { t: 'الإتيكيت الملكي', d: 'سلوكيات تعكس الرقي المصري', i: '👑' },
+            { t: 'الجذور التاريخية', d: 'فهم الماضي لصناعة المستقبل', i: '🏺' }
+          ].map((g, i) => (
+            <div key={i} onClick={() => setView('dashboard')} className="group bg-slate-900 border border-amber-500/20 p-10 rounded-[35px] cursor-pointer hover:border-amber-500 transition-all hover:-translate-y-2">
+              <div className="text-6xl mb-6">{g.i}</div>
+              <h3 className="text-2xl font-bold mb-2 group-hover:text-amber-500 transition">{g.t}</h3>
+              <p className="text-gray-500 text-sm">{g.d}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-[#020202] text-white font-['Cairo'] flex" dir="rtl">
+      {/* Sidebar */}
+      <aside className="w-72 bg-slate-950 border-l border-amber-500/10 p-6 flex flex-col gap-4">
+        <div className="mb-10 px-4">
+          <h1 className="text-3xl font-black text-amber-500">YALLA MASRY</h1>
+          <p className="text-[10px] text-amber-100/30 uppercase tracking-[0.3em]">Official System</p>
+        </div>
+        
+        <nav className="flex flex-col gap-2">
+          <SidebarItem icon={Layout} label="الرئيسية" active={tab === 'main'} onClick={() => setTab('main')} />
+          <SidebarItem icon={MapPin} label="رحلة الواقع" active={tab === 'journey'} onClick={() => setTab('journey')} />
+          <SidebarItem icon={BookOpen} label="الدروس الملكية" active={tab === 'lessons'} onClick={() => setTab('lessons')} />
+          <SidebarItem icon={ShoppingBag} label="المتجر" active={tab === 'shop'} onClick={() => setTab('shop')} />
+          <div className="my-4 border-t border-amber-500/10"></div>
+          <SidebarItem icon={Settings} label="لوحة التحكم" active={tab === 'admin'} onClick={() => setTab('admin')} color="text-red-500" />
+        </nav>
+
+        <div className="mt-auto p-4 bg-amber-500/5 rounded-2xl border border-amber-500/10">
+          <p className="text-xs text-amber-500 mb-1 font-bold">الملكة: نفرتيتي</p>
+          <p className="text-[10px] text-gray-500">المستوى: محترف</p>
+        </div>
+      </aside>
+
+      {/* Main Content */}
+      <main className="flex-1 p-10 overflow-y-auto">
+        
+        {tab === 'main' && (
+          <div className="space-y-10 animate-in fade-in duration-700">
+            <header className="flex justify-between items-end">
+              <div>
+                <h2 className="text-4xl font-black mb-2 text-white">أهلاً بكِ في عَرشكِ، <span className="text-amber-500">نفرتيتي</span></h2>
+                <p className="text-gray-500 italic">"نحن لا نبني مشروعاً، نحن نعيد صياغة الهوية"</p>
+              </div>
+              <div className="flex gap-4">
+                <div className="bg-slate-900 px-6 py-3 rounded-2xl border border-amber-500/20 text-center">
+                  <p className="text-[10px] text-gray-500 uppercase">النقاط الملكية</p>
+                  <p className="text-xl font-black text-amber-500">{userPoints}</p>
+                </div>
+              </div>
+            </header>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <Card title="تقدم الهوية" icon={Star}>
+                <div className="flex items-center gap-4">
+                  <div className="flex-1 h-3 bg-black rounded-full overflow-hidden">
+                    <div className="h-full bg-amber-500 w-[75%] shadow-[0_0_15px_#f59e0b]"></div>
+                  </div>
+                  <span className="font-bold">75%</span>
+                </div>
+              </Card>
+              <Card title="المعلمات النشطات" icon={User}>
+                <div className="flex -space-x-3 space-x-reverse">
+                  {[1,2,3,4].map(i => <div key={i} className="w-10 h-10 rounded-full bg-amber-500 border-2 border-black" />)}
+                  <div className="w-10 h-10 rounded-full bg-slate-800 border-2 border-black flex items-center justify-center text-[10px]">+5</div>
+                </div>
+              </Card>
+              <Card title="تحدي اليوم" icon={Trophy}>
+                <p className="text-sm text-gray-400">تحدثي بالفصحى لمدة دقيقتين عن "الأمانة".</p>
+              </Card>
+            </div>
+
+            <div className="bg-slate-900/40 rounded-[40px] p-8 border border-amber-500/10">
+              <h3 className="text-2xl font-black mb-6">متابعة الدروس</h3>
+              <div className="space-y-4">
+                {[
+                  { t: 'فن الإتيكيت في المآدب', m: 'أ. سارة', p: '90%' },
+                  { t: 'تاريخ الأسرة الثامنة عشر', m: 'د. ليلى', p: '20%' }
+                ].map((d, i) => (
+                  <div key={i} className="bg-black/40 p-5 rounded-2xl flex items-center justify-between group hover:bg-amber-500/5 transition">
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 bg-amber-500/20 rounded-xl flex items-center justify-center text-amber-500 font-bold">{i+1}</div>
+                      <div>
+                        <p className="font-bold">{d.t}</p>
+                        <p className="text-xs text-gray-500">المعلمة: {d.m}</p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm font-bold text-amber-500">{d.p}</p>
+                      <button className="text-[10px] uppercase tracking-wider text-gray-400 group-hover:text-white transition">استمرار</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {/* Dashboard View */}
-      {view === 'dashboard' && (
-        <div className="max-w-7xl mx-auto px-6 py-12">
-          <div className="grid lg:grid-cols-4 gap-8">
-            <aside className="lg:col-span-1 space-y-4">
-              <div className="bg-[#001a4d] border border-[#FFD700]/20 rounded-3xl p-6 text-center">
-                <div className="w-16 h-16 mx-auto bg-[#FFD700]/10 rounded-full mb-4 flex items-center justify-center border border-[#FFD700]">
-                  <User size={30} className="text-[#FFD700]" />
-                </div>
-                <h3 className="text-white font-bold">{lang === 'ar' ? 'الملكة نفرتيتي' : 'Queen Nefertiti'}</h3>
-                <p className="text-[#FFD700] text-[10px] mt-1">{t.dash_level}</p>
+        {tab === 'journey' && (
+          <div className="max-w-4xl mx-auto space-y-8 animate-in slide-in-from-bottom duration-500">
+            <h2 className="text-3xl font-black text-amber-500">محاكاة الواقع المصري</h2>
+            <div className="relative bg-slate-900 rounded-[50px] p-12 border-2 border-amber-500/20 overflow-hidden min-h-[400px] flex flex-col justify-center items-center text-center">
+              <div className="absolute top-0 left-0 w-full h-1 bg-amber-500/10">
+                <div 
+                  className="h-full bg-amber-500 transition-all duration-1000" 
+                  style={{ width: `${((journeyStep + 1) / journeyStages.length) * 100}%` }}
+                ></div>
               </div>
-              <nav className="space-y-1">
-                <button onClick={() => setActiveTab('overview')} className={`w-full flex items-center gap-4 px-6 py-4 rounded-2xl transition-all ${activeTab === 'overview' ? 'bg-[#FFD700] text-[#001233]' : ''}`}>
-                  <LayoutDashboard size={18} /> {t.dash_overview}
-                </button>
-                <button onClick={() => setActiveTab('lessons')} className={`w-full flex items-center gap-4 px-6 py-4 rounded-2xl transition-all ${activeTab === 'lessons' ? 'bg-[#FFD700] text-[#001233]' : ''}`}>
-                  <PlayCircle size={18} /> {t.dash_lessons}
-                </button>
-                <button onClick={() => setActiveTab('challenges')} className={`w-full flex items-center gap-4 px-6 py-4 rounded-2xl transition-all ${activeTab === 'challenges' ? 'bg-[#FFD700] text-[#001233]' : ''}`}>
-                  <Trophy size={18} /> {t.dash_challenges}
-                </button>
-                <button onClick={() => setActiveTab('teachers')} className={`w-full flex items-center gap-4 px-6 py-4 rounded-2xl transition-all ${activeTab === 'teachers' ? 'bg-[#FFD700] text-[#001233]' : ''}`}>
-                  <GraduationCap size={18} /> {t.dash_teachers}
-                </button>
-                <button onClick={() => setView('landing')} className="w-full flex items-center gap-4 px-6 py-4 rounded-2xl text-red-400 mt-6">
-                  <LogOut size={18} /> {t.dash_logout}
-                </button>
-              </nav>
-            </aside>
+              
+              <div className="mb-8 p-6 bg-amber-500/10 rounded-full animate-bounce">
+                {React.createElement(journeyStages[journeyStep].icon, { size: 64, className: "text-amber-500" })}
+              </div>
+              
+              <h3 className="text-4xl font-black mb-2">{journeyStages[journeyStep].name}</h3>
+              <p className="text-amber-500 font-bold mb-6 italic">{journeyStages[journeyStep].char}</p>
+              
+              <div className="max-w-2xl bg-black/40 p-8 rounded-[30px] border border-white/5 mb-10">
+                <p className="text-2xl leading-relaxed text-amber-100">"{journeyStages[journeyStep].msg}"</p>
+              </div>
 
-            <main className="lg:col-span-3 space-y-6">
-               {activeTab === 'overview' && (
-                 <div className="bg-gradient-to-br from-[#001a4d] to-[#001233] border border-[#FFD700]/20 rounded-[2rem] p-8">
-                   <h4 className="text-[#FFD700] font-bold mb-6 flex items-center gap-2 uppercase tracking-widest"><Star size={16}/> {t.dash_progress}</h4>
-                   <div className="h-2 w-full bg-[#001233] rounded-full overflow-hidden mb-4">
-                     <div className={`h-full bg-[#FFD700] transition-all duration-1000 ${lang === 'ar' ? 'float-right' : 'float-left'}`} style={{ width: '65%' }} />
-                   </div>
-                   <p className="text-sm text-blue-200/60 italic">{t.dash_status}</p>
-                 </div>
-               )}
-
-               {activeTab === 'lessons' && (
-                 <div className="space-y-4">
-                   <h3 className="text-2xl font-bold mb-6">{t.lessons_title}</h3>
-                   {lessons.map((l, i) => (
-                     <div key={i} className="flex items-center justify-between p-6 bg-[#001a4d] border border-white/5 rounded-3xl group hover:border-[#FFD700]/30 transition-all">
-                       <div className="flex items-center gap-4">
-                         <PlayCircle className="text-[#FFD700]" />
-                         <div>
-                            <h5 className="font-bold">{l.title}</h5>
-                            <span className="text-[10px] opacity-40">{l.duration}</span>
-                         </div>
-                       </div>
-                       <span className="text-[10px] bg-[#FFD700]/10 text-[#FFD700] px-3 py-1 rounded-full">{l.status}</span>
-                     </div>
-                   ))}
-                 </div>
-               )}
-
-               {activeTab === 'teachers' && (
-                 <div className="grid md:grid-cols-2 gap-6">
-                   {teachers.map((teach, i) => (
-                     <div key={i} className="bg-[#001a4d] border border-white/5 rounded-[2.5rem] p-8 text-center group hover:border-[#FFD700]/40 transition-all">
-                        <img src={teach.image} alt={teach.name} className="w-24 h-24 mx-auto rounded-full object-cover mb-4 border-2 border-[#FFD700]/20" />
-                        <h5 className="text-lg font-bold">{teach.name}</h5>
-                        <p className="text-[#FFD700] text-[10px] italic">{teach.specialty}</p>
-                     </div>
-                   ))}
-                 </div>
-               )}
-
-               {activeTab === 'challenges' && (
-                 <div className="grid md:grid-cols-2 gap-4">
-                   {challenges.map((c, i) => (
-                     <div key={i} className="p-6 bg-[#001a4d] border border-[#FFD700]/10 rounded-3xl flex flex-col justify-between h-40">
-                        <h5 className="font-bold text-lg">{c.title}</h5>
-                        <div className="flex justify-between items-center">
-                           <span className="text-[#FFD700] font-black">{c.points} {t.challenge_points}</span>
-                           <button className="text-[10px] flex items-center gap-1 hover:text-[#FFD700]">
-                             {t.start_challenge} <ChevronRight size={14} className={lang === 'ar' ? 'rotate-180' : ''} />
-                           </button>
-                        </div>
-                     </div>
-                   ))}
-                 </div>
-               )}
-            </main>
+              <div className="flex gap-4">
+                <button 
+                  disabled={journeyStep === 0}
+                  onClick={() => setJourneyStep(s => s - 1)}
+                  className="px-8 py-3 rounded-full border border-amber-500/30 text-amber-500 disabled:opacity-30"
+                >
+                  السابق
+                </button>
+                <button 
+                  onClick={() => journeyStep < journeyStages.length - 1 ? setJourneyStep(s => s + 1) : setJourneyStep(0)}
+                  className="px-12 py-3 rounded-full bg-amber-500 text-black font-black shadow-lg shadow-amber-500/20"
+                >
+                  {journeyStep === journeyStages.length - 1 ? 'إعادة الرحلة' : 'المحطة التالية'}
+                </button>
+              </div>
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {/* Footer */}
-      <footer className="py-12 border-t border-[#FFD700]/10 mt-20 opacity-40">
-        <div className="max-w-7xl mx-auto text-center px-6">
-           <p className="text-[10px] tracking-[0.4em] uppercase">{t.rights}</p>
-        </div>
-      </footer>
+        {tab === 'shop' && (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 animate-in zoom-in duration-500">
+            {[
+              { n: 'عقد نفرتيتي الذهبي', p: 5000, i: '📿' },
+              { n: 'كتاب الإتيكيت الحديث', p: 300, i: '📚' },
+              { n: 'بخور المعز الملكي', p: 150, i: '🕯️' },
+              { n: 'دورة الفصاحة المتقدمة', p: 1200, i: '📜' }
+            ].map((item, i) => (
+              <div key={i} className="bg-slate-900 p-8 rounded-[35px] border border-amber-500/10 hover:border-amber-500 transition group text-center">
+                <div className="text-5xl mb-6">{item.i}</div>
+                <h4 className="text-xl font-bold mb-2">{item.n}</h4>
+                <p className="text-amber-500 font-black mb-6">{item.p} نقطة</p>
+                <button className="w-full py-3 rounded-xl bg-white/5 group-hover:bg-amber-500 group-hover:text-black transition-all font-bold">شراء الآن</button>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {tab === 'admin' && (
+          <div className="space-y-8 animate-in fade-in duration-500">
+            <h2 className="text-3xl font-black text-red-500">مركز التحكم (الإدارة والمعلمات)</h2>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <Card title="إدارة الملكات (الطالبات)">
+                <div className="space-y-4">
+                  {['نفرتيتي', 'زليخة', 'ماعت'].map((name, i) => (
+                    <div key={i} className="flex items-center justify-between p-4 bg-black/30 rounded-2xl">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-full bg-red-500/20 border border-red-500" />
+                        <span className="font-bold text-sm">{name}</span>
+                      </div>
+                      <span className="text-[10px] text-green-500 font-bold">نشطة الآن</span>
+                      <button className="text-[10px] bg-white/5 px-3 py-1 rounded-md">سجل الدروس</button>
+                    </div>
+                  ))}
+                </div>
+              </Card>
+              <Card title="رفع محتوى جديد">
+                <div className="space-y-4">
+                  <input placeholder="عنوان الدرس" className="w-full bg-black/50 border border-white/10 p-4 rounded-xl outline-none focus:border-red-500 text-sm" />
+                  <select className="w-full bg-black/50 border border-white/10 p-4 rounded-xl outline-none focus:border-red-500 text-sm text-gray-400">
+                    <option>اختر القسم</option>
+                    <option>إتيكيت</option>
+                    <option>فصاحة</option>
+                  </select>
+                  <button className="w-full py-4 rounded-xl bg-red-600 font-black text-white hover:bg-red-700 transition shadow-lg shadow-red-600/20">نشر المحتوى للملكات</button>
+                </div>
+              </Card>
+            </div>
+          </div>
+        )}
+
+      </main>
     </div>
   );
 }
