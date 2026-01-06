@@ -1,13 +1,10 @@
-/**
- * @file layout.tsx
- * @description الهيكل الملكي الأساسي لأكاديمية نفرتيتي - نسخة نهائية مستقرة متوافقة مع معايير DOM
- */
+import React from "react";
+import type { Metadata } from "next";
+import "./globals.css"; // تأكدي من وجود ملف التنسيق العام
 
-import React from 'react';
-
-export const metadata = {
-  title: 'أكاديمية نفرتيتي الملكية',
-  description: 'منصة استعادة المجد الفكري والسيادة الملكية',
+export const metadata: Metadata = {
+  title: "أكاديمية نفرتيتي الملكية | إعادة صياغة الهوية",
+  description: "منصة تعليمية ملكية لتعلم اللهجة المصرية بروح حتشبسوت ونفرتيتي",
 };
 
 export default function RootLayout({
@@ -17,110 +14,66 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ar" dir="rtl">
-      <body
-        style={{
-          margin: 0,
-          padding: 0,
-          backgroundColor: '#050a15',
-          color: 'white',
-          fontFamily: 'system-ui, -apple-system, sans-serif',
-          minHeight: '100vh',
-          display: 'flex',
-          flexDirection: 'column',
-        }}
-      >
-        {/* شريط التنقل الملكي العلوي */}
-        <nav
-          style={{
-            backgroundColor: 'rgba(10, 15, 26, 0.98)',
-            backdropFilter: 'blur(12px)',
-            padding: '1.2rem 6%',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            borderBottom: '2px solid #f59e0b',
-            position: 'sticky',
-            top: 0,
-            zIndex: 1000,
-          }}
-        >
-          {/* الشعار */}
-          <div
-            style={{
-              color: '#f59e0b',
-              fontSize: '1.8rem',
-              fontWeight: 'bold',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '12px',
-            }}
-          >
-            <span style={{ fontSize: '2.2rem' }}>🏺</span>
-            نفرتيتي الملكية
-          </div>
-
-          {/* القائمة */}
-          <ul
-            style={{
-              display: 'flex',
-              gap: '2.5rem',
-              listStyle: 'none',
-              margin: 0,
-              padding: 0,
-              alignItems: 'center',
-            }}
-          >
-            <li style={navLinkStyle}>الرئيسية</li>
-            <li style={navLinkStyle}>الدروس</li>
-            <li style={navLinkStyle}>المعلمات</li>
-            <li
-              style={{
-                ...navLinkStyle,
-                color: '#050a15',
-                backgroundColor: '#f59e0b',
-                padding: '8px 20px',
-                borderRadius: '12px',
-                fontWeight: 'bold',
-              }}
-            >
-              المتجر 🛒
-            </li>
-          </ul>
-        </nav>
-
-        {/* محتوى الصفحة الرئيسي */}
-        <main
-          style={{
-            flex: 1,
-            width: '100%',
-            maxWidth: '1440px',
-            margin: '0 auto',
-            padding: '2rem 6%',
-            boxSizing: 'border-box',
-          }}
-        >
+      <head>
+        {/* استدعاء خطوط فخمة تدعم الملوكية العربية */}
+        <link
+          href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@300;400;700&display=swap"
+          rel="stylesheet"
+        />
+      </head>
+      <body style={bodyStyle}>
+        {/* تأثير الوهج الملكي في الخلفية */}
+        <div style={royalOverlay}></div>
+        
+        {/* المحتوى الرئيسي (الصفحات التي ندمجها) */}
+        <div style={contentWrapper}>
           {children}
-        </main>
+        </div>
 
-        {/* التذييل الملكي */}
-        <footer
-          style={{
-            textAlign: 'center',
-            padding: '2rem',
-            borderTop: '1px solid rgba(245, 158, 11, 0.1)',
-            color: 'rgba(255,255,255,0.4)',
-            fontSize: '0.8rem',
-          }}
-        >
-          © ٢٠٢٦ أكاديمية نفرتيتي • صرح السيادة الفكرية
+        {/* تذيل الصفحة الملكي (Footer) */}
+        <footer style={footerStyle}>
+          <p>© 2026 أكاديمية نفرتيتي الملكية - نحن لا نبني مشروعاً، نحن نعيد صياغة الهوية</p>
         </footer>
       </body>
     </html>
   );
 }
 
-const navLinkStyle: React.CSSProperties = {
-  cursor: 'pointer',
-  fontSize: '1rem',
-  whiteSpace: 'nowrap',
+// --- التنسيقات الهيكلية النهائية ---
+
+const bodyStyle: React.CSSProperties = {
+  margin: 0,
+  padding: 0,
+  backgroundColor: "#05050a", // الأسود العميق
+  color: "#ffffff",
+  fontFamily: "'Cairo', 'Amiri', serif",
+  minHeight: "100vh",
+  overflowX: "hidden",
+  position: "relative",
+};
+
+const royalOverlay: React.CSSProperties = {
+  position: "fixed",
+  top: 0,
+  left: 0,
+  width: "100%",
+  height: "100%",
+  // تدرج شعاعي يعطي إضاءة خافتة في المنتصف كأنها هالة حول العرش
+  background: "radial-gradient(circle at center, rgba(212, 175, 55, 0.05) 0%, transparent 70%)",
+  pointerEvents: "none",
+  zIndex: 1,
+};
+
+const contentWrapper: React.CSSProperties = {
+  position: "relative",
+  zIndex: 2, // لضمان ظهور المحتوى فوق الهالة
+};
+
+const footerStyle: React.CSSProperties = {
+  textAlign: "center",
+  padding: "40px 20px",
+  borderTop: "1px solid rgba(212, 175, 55, 0.1)",
+  fontSize: "0.9rem",
+  color: "rgba(212, 175, 55, 0.6)",
+  background: "rgba(0, 0, 0, 0.5)",
 };
