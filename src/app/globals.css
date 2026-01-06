@@ -1,21 +1,38 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
+/* تنسيق الصفحة العام */
 body {
-  background-color: #f0f4f8; /* لون مريح للعين */
-  line-height: 1.8; /* يمنع تداخل السطور التي رأيناها */
-  color: #1e3a8a; /* الأزرق الملكي */
-  margin: 0;
-  padding: 0;
+    background: radial-gradient(circle at center, #1a1a2e 0%, #0f0c29 100%);
+    font-family: 'Cairo', sans-serif;
+    color: #fff;
+    margin: 0;
 }
 
-/* تنظيم بطاقات المعلمات لتظهر بشكل منفصل ومرتب */
-.teacher-card {
-  background: white;
-  border-radius: 20px;
-  padding: 25px;
-  margin-bottom: 30px;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-  border-left: 5px solid #d4af37; /* لمسة ذهبية */
+/* العنوان الملكي */
+.royal-title {
+    color: #D4AF37; /* ذهبي ملكي */
+    font-size: 2.5rem;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+/* شعار الهوية */
+.identity-slogan {
+    font-style: italic;
+    color: rgba(255, 255, 255, 0.7);
+    text-align: center;
+    border-right: 3px solid #D4AF37; /* لمسة جانبية ذهبية */
+    padding-right: 15px;
+}
+
+/* بطاقات لوحة التحكم */
+.dashboard-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    border-radius: 12px;
+    padding: 20px;
+    transition: 0.3s ease;
+}
+
+.dashboard-card:hover {
+    border-color: #D4AF37;
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
 }
