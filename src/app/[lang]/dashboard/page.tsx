@@ -1,5 +1,5 @@
 "use client";
-
+export const dynamic = 'force-dynamic';
 import React from 'react';
 import { Trophy, Star, Droplets, Flame, ShieldCheck, BookOpen, Crown } from 'lucide-react';
 import { cn } from "@/lib/utils";
